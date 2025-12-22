@@ -14,6 +14,18 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/icon_arrow_left.png
+  AssetGenImage get iconArrowLeft =>
+      const AssetGenImage('assets/icons/icon_arrow_left.png');
+
+  /// File path: assets/icons/icon_favorite.png
+  AssetGenImage get iconFavorite =>
+      const AssetGenImage('assets/icons/icon_favorite.png');
+
+  /// File path: assets/icons/icon_favorite_filled.png
+  AssetGenImage get iconFavoriteFilled =>
+      const AssetGenImage('assets/icons/icon_favorite_filled.png');
+
   /// File path: assets/icons/icon_filter.png
   AssetGenImage get iconFilter =>
       const AssetGenImage('assets/icons/icon_filter.png');
@@ -23,7 +35,13 @@ class $AssetsIconsGen {
       const AssetGenImage('assets/icons/icon_pokeball.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [iconFilter, iconPokeball];
+  List<AssetGenImage> get values => [
+    iconArrowLeft,
+    iconFavorite,
+    iconFavoriteFilled,
+    iconFilter,
+    iconPokeball,
+  ];
 }
 
 class $AssetsImagesGen {

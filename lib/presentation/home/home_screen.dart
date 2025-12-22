@@ -7,6 +7,7 @@ import 'package:pokedex/core/components/loading/loading_grid.dart';
 import 'package:pokedex/core/components/pokemon/pokemon_item.dart';
 import 'package:pokedex/domain/dto/base_filter/base_filter_dto.dart';
 import 'package:pokedex/gen/assets.gen.dart';
+import 'package:pokedex/routing/route.gr.dart';
 import 'package:pokedex/theme/theme.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -219,7 +220,12 @@ class _PokemonSections extends StatelessWidget {
                   crossAxisSpacing: AppSetting.setWidth(40),
                   itemBuilder: (context, index) {
                     final pokemon = pokemons[index];
-                    return PokemonItem(pokemon: pokemon, onClick: () {});
+                    return PokemonItem(
+                      pokemon: pokemon,
+                      onClick: () => context.router.push(
+                        PokemonDetailRoute(pokemon: pokemon),
+                      ),
+                    );
                   },
                 ),
                 if (onLoadMore)

@@ -77,10 +77,13 @@ class PokemonItem extends StatelessWidget {
               bottom: 0,
               right: 0,
               child: pokemon.sprites?.other?.home?.frontDefault != null
-                  ? Image.network(
-                      pokemon.sprites?.other?.home?.frontDefault ?? "",
-                      width: AppSetting.setWidth(260),
-                      height: AppSetting.setHeight(260),
+                  ? Hero(
+                      tag: "pokemon_image_${pokemon.id}",
+                      child: Image.network(
+                        pokemon.sprites?.other?.home?.frontDefault ?? "",
+                        width: AppSetting.setWidth(260),
+                        height: AppSetting.setHeight(260),
+                      ),
                     )
                   : SizedBox(
                       width: AppSetting.setWidth(150),

@@ -137,9 +137,10 @@ class _ContentSectionState extends State<_ContentSection> {
                       topRight: Radius.circular(AppSetting.setWidth(50)),
                     ),
                   ),
-                  padding: .symmetric(
-                    vertical: AppSetting.setHeight(150),
-                    horizontal: AppSetting.setWidth(50),
+                  padding: .only(
+                    top: AppSetting.setHeight(130),
+                    left: AppSetting.setWidth(50),
+                    right: AppSetting.setWidth(50),
                   ),
                   child: Column(
                     crossAxisAlignment: .start,

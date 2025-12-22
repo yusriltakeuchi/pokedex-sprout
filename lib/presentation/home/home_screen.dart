@@ -1,8 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex/bloc/pokemon/get_pokemon_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/loading/loading_grid.dart';
+import 'package:pokedex/core/components/pokemon/pokemon_item.dart';
+import 'package:pokedex/domain/dto/base_filter/base_filter_dto.dart';
 import 'package:pokedex/gen/assets.gen.dart';
 import 'package:pokedex/theme/theme.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
@@ -11,55 +17,150 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const HomeBody(),
+      body: BlocProvider<GetPokemonBloc>(
+        create: (context) =>
+            GetPokemonBloc()..getPokemons(BaseFilterDTO(limit: 20, offset: 0)),
+        child: HomeBody(),
+      ),
     );
   }
 }
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
 
   @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  ScrollController? _scrollController;
+  final double threshold = 200.0;
+
+  void _scrollListener() {
+    if (!_scrollController!.hasClients) return;
+    if (_scrollController!.position.pixels >=
+            _scrollController!.position.maxScrollExtent - threshold &&
+        !_scrollController!.position.outOfRange) {
+      if (mounted) {
+        /// Load more pokemons
+        context.read<GetPokemonBloc>().loadMore();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      _scrollController?.removeListener(_scrollListener);
+      _scrollController?.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = .new();
+    _scrollController?.addListener(_scrollListener);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _BackgroundHeaderColor(),
-        SafeArea(
-          child: Padding(
-            padding: .symmetric(
-              horizontal: AppSetting.setWidth(30),
-              vertical: AppSetting.setHeight(20),
+    return RefreshIndicator(
+      onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
+        BaseFilterDTO(limit: 20, offset: 0),
+      ),
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        child: Stack(
+          children: [
+            _BackgroundHeaderColor(),
+            SafeArea(
+              child: Padding(
+                padding: .symmetric(
+                  horizontal: AppSetting.setWidth(40),
+                  vertical: AppSetting.setHeight(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: .spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Pokedex",
+                            style: MyTheme.style.title.copyWith(
+                              fontSize: AppSetting.setFontSize(60),
+                              color: MyTheme.color.white,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Assets.icons.iconFilter.image(
+                            width: AppSetting.setWidth(60),
+                            height: AppSetting.setHeight(60),
+                            color: MyTheme.color.white,
+                          ),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    Space.h(30),
+                    _PokemonSections(),
+                  ],
+                ),
+              ),
             ),
-            child: Column(
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PokemonSections extends StatelessWidget {
+  const _PokemonSections();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GetPokemonBloc, GetPokemonState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () => const SizedBox(),
+          loading: () => LoadingGrid(crossAxis: 2, height: 300, length: 8),
+          loaded: (pokemons, offset, limit, hasReachedMax, onLoadMore) {
+            return Column(
               crossAxisAlignment: .start,
               children: [
-                Row(
-                  mainAxisAlignment: .spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Pokedex",
-                        style: MyTheme.style.title.copyWith(
-                          fontSize: AppSetting.setFontSize(60),
-                          color: MyTheme.color.white,
-                        ),
-                      ),
+                AlignedGridView.count(
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(0),
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: pokemons.length,
+                  shrinkWrap: true,
+                  mainAxisSpacing: AppSetting.setHeight(40),
+                  crossAxisSpacing: AppSetting.setWidth(40),
+                  itemBuilder: (context, index) {
+                    final pokemon = pokemons[index];
+                    return PokemonItem(pokemon: pokemon, onClick: () {});
+                  },
+                ),
+                if (onLoadMore)
+                  Padding(
+                    padding: .only(
+                      top: AppSetting.setHeight(40),
+                      bottom: AppSetting.setHeight(20),
                     ),
-                    IconButton(
-                      icon: Assets.icons.iconFilter.image(
-                        width: AppSetting.setWidth(60),
-                        height: AppSetting.setHeight(60),
-                        color: MyTheme.color.white,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
-                )
+                    child: LoadingGrid(crossAxis: 2, height: 300, length: 4),
+                  ),
               ],
-            ),
-          ),
-        )
-      ],
+            );
+          },
+        );
+      },
     );
   }
 }

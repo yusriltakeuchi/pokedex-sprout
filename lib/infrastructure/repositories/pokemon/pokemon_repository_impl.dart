@@ -9,8 +9,8 @@ class PokemonRepositoryImpl implements PokemonRepository {
   PokemonRepositoryImpl(this.pokemonDataSource);
 
   @override
-  Future<Either<Failure, PokemonEntity>> getPokemon(String id)
-    => pokemonDataSource.getPokemon(id);
+  Future<Either<Failure, PokemonEntity>> getPokemon(String name)
+    => pokemonDataSource.getPokemon(name);
 
   @override
   Future<Either<Failure, List<PokemonEntity>>> getPokemons({Map<String, dynamic>? params})

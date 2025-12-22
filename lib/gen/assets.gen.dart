@@ -18,8 +18,12 @@ class $AssetsIconsGen {
   AssetGenImage get iconFilter =>
       const AssetGenImage('assets/icons/icon_filter.png');
 
+  /// File path: assets/icons/icon_pokeball.png
+  AssetGenImage get iconPokeball =>
+      const AssetGenImage('assets/icons/icon_pokeball.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [iconFilter];
+  List<AssetGenImage> get values => [iconFilter, iconPokeball];
 }
 
 class $AssetsImagesGen {

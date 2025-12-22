@@ -5,5 +5,5 @@ class Endpoint {
 
   /// POKEMON ENDPOINT
   static const getPokemons = "/pokemon";
-  static const getPokemon = "/pokemon/{id}";
+  static const getPokemon = "/pokemon/{name}";
 }

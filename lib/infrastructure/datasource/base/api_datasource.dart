@@ -5,7 +5,6 @@ import 'package:pokedex/core/models/base_response.dart';
 import 'package:pokedex/core/models/base_response_list.dart';
 import 'package:pokedex/core/networks/api_client.dart';
 import 'package:pokedex/core/networks/error_handler.dart';
-import 'package:pokedex/core/networks/result_handler.dart';
 // Define the generic API data source class
 class ApiDataSource<T> {
   final ApiClient apiClient;

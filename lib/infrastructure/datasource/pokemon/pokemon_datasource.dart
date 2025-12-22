@@ -12,6 +12,6 @@ class PokemonDataSource {
   Future<Either<Failure, List<PokemonEntity>>> getPokemons({Map<String, dynamic>? params}) async
     => apiClient.pokemon.getList(Endpoint.getPokemons, queryParams: params);
 
-  Future<Either<Failure, PokemonEntity>> getPokemon(String id) async
-    => apiClient.pokemon.get(Endpoint.getPokemon.replaceAll("{id}", id));
+  Future<Either<Failure, PokemonEntity>> getPokemon(String name) async
+    => apiClient.pokemon.get(Endpoint.getPokemon.replaceAll("{name}", name));
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/gen/assets.gen.dart';
+import 'package:pokedex/routing/route.gr.dart';
 import 'package:pokedex/theme/theme.dart';
 
 @RoutePage()
@@ -38,6 +39,7 @@ class _SplashBodyState extends State<SplashBody> {
     super.initState();
     Future.delayed(const Duration(seconds: 2)).then((_) {
       /// Navigate to home screen
+      context.router.replaceAll([const HomeRoute()]);
     });
   }
   @override

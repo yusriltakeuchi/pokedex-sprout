@@ -29,6 +29,9 @@ _PokemonEntity _$PokemonEntityFromJson(Map<String, dynamic> json) =>
       sprites: json['sprites'] == null
           ? null
           : SpriteEntity.fromJson(json['sprites'] as Map<String, dynamic>),
+      species: json['species'] == null
+          ? null
+          : SpeciesEntity.fromJson(json['species'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PokemonEntityToJson(_PokemonEntity instance) =>
@@ -44,4 +47,5 @@ Map<String, dynamic> _$PokemonEntityToJson(_PokemonEntity instance) =>
       'cries': instance.cries,
       'stats': instance.stats,
       'sprites': instance.sprites,
+      'species': instance.species,
     };

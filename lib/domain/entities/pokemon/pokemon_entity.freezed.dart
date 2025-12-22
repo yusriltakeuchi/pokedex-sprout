@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PokemonEntity {
 
-@JsonKey(name: 'id') int? get id;@JsonKey(name: 'name') String? get name;@JsonKey(name: 'weight') int? get weight;@JsonKey(name: 'order') int? get order;@JsonKey(name: 'height') int? get height;@JsonKey(name: 'base_experience') int? get baseExperience;@JsonKey(name: 'types') List<TypeSlotEntity>? get types;@JsonKey(name: 'abilities') List<AbilitySlotEntity>? get abilities;@JsonKey(name: 'cries') CryEntity? get cries;@JsonKey(name: 'stats') List<StatEntity>? get stats;@JsonKey(name: 'sprites') SpriteEntity? get sprites;
+@JsonKey(name: 'id') int? get id;@JsonKey(name: 'name') String? get name;@JsonKey(name: 'weight') int? get weight;@JsonKey(name: 'order') int? get order;@JsonKey(name: 'height') int? get height;@JsonKey(name: 'base_experience') int? get baseExperience;@JsonKey(name: 'types') List<TypeSlotEntity>? get types;@JsonKey(name: 'abilities') List<AbilitySlotEntity>? get abilities;@JsonKey(name: 'cries') CryEntity? get cries;@JsonKey(name: 'stats') List<StatEntity>? get stats;@JsonKey(name: 'sprites') SpriteEntity? get sprites;@JsonKey(name: 'species') SpeciesEntity? get species;
 /// Create a copy of PokemonEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PokemonEntityCopyWith<PokemonEntity> get copyWith => _$PokemonEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PokemonEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.order, order) || other.order == order)&&(identical(other.height, height) || other.height == height)&&(identical(other.baseExperience, baseExperience) || other.baseExperience == baseExperience)&&const DeepCollectionEquality().equals(other.types, types)&&const DeepCollectionEquality().equals(other.abilities, abilities)&&(identical(other.cries, cries) || other.cries == cries)&&const DeepCollectionEquality().equals(other.stats, stats)&&(identical(other.sprites, sprites) || other.sprites == sprites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PokemonEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.order, order) || other.order == order)&&(identical(other.height, height) || other.height == height)&&(identical(other.baseExperience, baseExperience) || other.baseExperience == baseExperience)&&const DeepCollectionEquality().equals(other.types, types)&&const DeepCollectionEquality().equals(other.abilities, abilities)&&(identical(other.cries, cries) || other.cries == cries)&&const DeepCollectionEquality().equals(other.stats, stats)&&(identical(other.sprites, sprites) || other.sprites == sprites)&&(identical(other.species, species) || other.species == species));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,weight,order,height,baseExperience,const DeepCollectionEquality().hash(types),const DeepCollectionEquality().hash(abilities),cries,const DeepCollectionEquality().hash(stats),sprites);
+int get hashCode => Object.hash(runtimeType,id,name,weight,order,height,baseExperience,const DeepCollectionEquality().hash(types),const DeepCollectionEquality().hash(abilities),cries,const DeepCollectionEquality().hash(stats),sprites,species);
 
 @override
 String toString() {
-  return 'PokemonEntity(id: $id, name: $name, weight: $weight, order: $order, height: $height, baseExperience: $baseExperience, types: $types, abilities: $abilities, cries: $cries, stats: $stats, sprites: $sprites)';
+  return 'PokemonEntity(id: $id, name: $name, weight: $weight, order: $order, height: $height, baseExperience: $baseExperience, types: $types, abilities: $abilities, cries: $cries, stats: $stats, sprites: $sprites, species: $species)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $PokemonEntityCopyWith<$Res>  {
   factory $PokemonEntityCopyWith(PokemonEntity value, $Res Function(PokemonEntity) _then) = _$PokemonEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'weight') int? weight,@JsonKey(name: 'order') int? order,@JsonKey(name: 'height') int? height,@JsonKey(name: 'base_experience') int? baseExperience,@JsonKey(name: 'types') List<TypeSlotEntity>? types,@JsonKey(name: 'abilities') List<AbilitySlotEntity>? abilities,@JsonKey(name: 'cries') CryEntity? cries,@JsonKey(name: 'stats') List<StatEntity>? stats,@JsonKey(name: 'sprites') SpriteEntity? sprites
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'weight') int? weight,@JsonKey(name: 'order') int? order,@JsonKey(name: 'height') int? height,@JsonKey(name: 'base_experience') int? baseExperience,@JsonKey(name: 'types') List<TypeSlotEntity>? types,@JsonKey(name: 'abilities') List<AbilitySlotEntity>? abilities,@JsonKey(name: 'cries') CryEntity? cries,@JsonKey(name: 'stats') List<StatEntity>? stats,@JsonKey(name: 'sprites') SpriteEntity? sprites,@JsonKey(name: 'species') SpeciesEntity? species
 });
 
 
-$CryEntityCopyWith<$Res>? get cries;$SpriteEntityCopyWith<$Res>? get sprites;
+$CryEntityCopyWith<$Res>? get cries;$SpriteEntityCopyWith<$Res>? get sprites;$SpeciesEntityCopyWith<$Res>? get species;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$PokemonEntityCopyWithImpl<$Res>
 
 /// Create a copy of PokemonEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? weight = freezed,Object? order = freezed,Object? height = freezed,Object? baseExperience = freezed,Object? types = freezed,Object? abilities = freezed,Object? cries = freezed,Object? stats = freezed,Object? sprites = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? weight = freezed,Object? order = freezed,Object? height = freezed,Object? baseExperience = freezed,Object? types = freezed,Object? abilities = freezed,Object? cries = freezed,Object? stats = freezed,Object? sprites = freezed,Object? species = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,8 @@ as List<TypeSlotEntity>?,abilities: freezed == abilities ? _self.abilities : abi
 as List<AbilitySlotEntity>?,cries: freezed == cries ? _self.cries : cries // ignore: cast_nullable_to_non_nullable
 as CryEntity?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as List<StatEntity>?,sprites: freezed == sprites ? _self.sprites : sprites // ignore: cast_nullable_to_non_nullable
-as SpriteEntity?,
+as SpriteEntity?,species: freezed == species ? _self.species : species // ignore: cast_nullable_to_non_nullable
+as SpeciesEntity?,
   ));
 }
 /// Create a copy of PokemonEntity
@@ -104,6 +105,18 @@ $SpriteEntityCopyWith<$Res>? get sprites {
 
   return $SpriteEntityCopyWith<$Res>(_self.sprites!, (value) {
     return _then(_self.copyWith(sprites: value));
+  });
+}/// Create a copy of PokemonEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SpeciesEntityCopyWith<$Res>? get species {
+    if (_self.species == null) {
+    return null;
+  }
+
+  return $SpeciesEntityCopyWith<$Res>(_self.species!, (value) {
+    return _then(_self.copyWith(species: value));
   });
 }
 }
@@ -187,10 +200,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'weight')  int? weight, @JsonKey(name: 'order')  int? order, @JsonKey(name: 'height')  int? height, @JsonKey(name: 'base_experience')  int? baseExperience, @JsonKey(name: 'types')  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities')  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries')  CryEntity? cries, @JsonKey(name: 'stats')  List<StatEntity>? stats, @JsonKey(name: 'sprites')  SpriteEntity? sprites)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'weight')  int? weight, @JsonKey(name: 'order')  int? order, @JsonKey(name: 'height')  int? height, @JsonKey(name: 'base_experience')  int? baseExperience, @JsonKey(name: 'types')  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities')  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries')  CryEntity? cries, @JsonKey(name: 'stats')  List<StatEntity>? stats, @JsonKey(name: 'sprites')  SpriteEntity? sprites, @JsonKey(name: 'species')  SpeciesEntity? species)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PokemonEntity() when $default != null:
-return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.baseExperience,_that.types,_that.abilities,_that.cries,_that.stats,_that.sprites);case _:
+return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.baseExperience,_that.types,_that.abilities,_that.cries,_that.stats,_that.sprites,_that.species);case _:
   return orElse();
 
 }
@@ -208,10 +221,10 @@ return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'weight')  int? weight, @JsonKey(name: 'order')  int? order, @JsonKey(name: 'height')  int? height, @JsonKey(name: 'base_experience')  int? baseExperience, @JsonKey(name: 'types')  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities')  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries')  CryEntity? cries, @JsonKey(name: 'stats')  List<StatEntity>? stats, @JsonKey(name: 'sprites')  SpriteEntity? sprites)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'weight')  int? weight, @JsonKey(name: 'order')  int? order, @JsonKey(name: 'height')  int? height, @JsonKey(name: 'base_experience')  int? baseExperience, @JsonKey(name: 'types')  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities')  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries')  CryEntity? cries, @JsonKey(name: 'stats')  List<StatEntity>? stats, @JsonKey(name: 'sprites')  SpriteEntity? sprites, @JsonKey(name: 'species')  SpeciesEntity? species)  $default,) {final _that = this;
 switch (_that) {
 case _PokemonEntity():
-return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.baseExperience,_that.types,_that.abilities,_that.cries,_that.stats,_that.sprites);case _:
+return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.baseExperience,_that.types,_that.abilities,_that.cries,_that.stats,_that.sprites,_that.species);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -228,10 +241,10 @@ return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'weight')  int? weight, @JsonKey(name: 'order')  int? order, @JsonKey(name: 'height')  int? height, @JsonKey(name: 'base_experience')  int? baseExperience, @JsonKey(name: 'types')  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities')  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries')  CryEntity? cries, @JsonKey(name: 'stats')  List<StatEntity>? stats, @JsonKey(name: 'sprites')  SpriteEntity? sprites)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'weight')  int? weight, @JsonKey(name: 'order')  int? order, @JsonKey(name: 'height')  int? height, @JsonKey(name: 'base_experience')  int? baseExperience, @JsonKey(name: 'types')  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities')  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries')  CryEntity? cries, @JsonKey(name: 'stats')  List<StatEntity>? stats, @JsonKey(name: 'sprites')  SpriteEntity? sprites, @JsonKey(name: 'species')  SpeciesEntity? species)?  $default,) {final _that = this;
 switch (_that) {
 case _PokemonEntity() when $default != null:
-return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.baseExperience,_that.types,_that.abilities,_that.cries,_that.stats,_that.sprites);case _:
+return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.baseExperience,_that.types,_that.abilities,_that.cries,_that.stats,_that.sprites,_that.species);case _:
   return null;
 
 }
@@ -243,7 +256,7 @@ return $default(_that.id,_that.name,_that.weight,_that.order,_that.height,_that.
 @JsonSerializable()
 
 class _PokemonEntity implements PokemonEntity {
-  const _PokemonEntity({@JsonKey(name: 'id') this.id, @JsonKey(name: 'name') this.name, @JsonKey(name: 'weight') this.weight, @JsonKey(name: 'order') this.order, @JsonKey(name: 'height') this.height, @JsonKey(name: 'base_experience') this.baseExperience, @JsonKey(name: 'types') final  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities') final  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries') this.cries, @JsonKey(name: 'stats') final  List<StatEntity>? stats, @JsonKey(name: 'sprites') this.sprites}): _types = types,_abilities = abilities,_stats = stats;
+  const _PokemonEntity({@JsonKey(name: 'id') this.id, @JsonKey(name: 'name') this.name, @JsonKey(name: 'weight') this.weight, @JsonKey(name: 'order') this.order, @JsonKey(name: 'height') this.height, @JsonKey(name: 'base_experience') this.baseExperience, @JsonKey(name: 'types') final  List<TypeSlotEntity>? types, @JsonKey(name: 'abilities') final  List<AbilitySlotEntity>? abilities, @JsonKey(name: 'cries') this.cries, @JsonKey(name: 'stats') final  List<StatEntity>? stats, @JsonKey(name: 'sprites') this.sprites, @JsonKey(name: 'species') this.species}): _types = types,_abilities = abilities,_stats = stats;
   factory _PokemonEntity.fromJson(Map<String, dynamic> json) => _$PokemonEntityFromJson(json);
 
 @override@JsonKey(name: 'id') final  int? id;
@@ -281,6 +294,7 @@ class _PokemonEntity implements PokemonEntity {
 }
 
 @override@JsonKey(name: 'sprites') final  SpriteEntity? sprites;
+@override@JsonKey(name: 'species') final  SpeciesEntity? species;
 
 /// Create a copy of PokemonEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -295,16 +309,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PokemonEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.order, order) || other.order == order)&&(identical(other.height, height) || other.height == height)&&(identical(other.baseExperience, baseExperience) || other.baseExperience == baseExperience)&&const DeepCollectionEquality().equals(other._types, _types)&&const DeepCollectionEquality().equals(other._abilities, _abilities)&&(identical(other.cries, cries) || other.cries == cries)&&const DeepCollectionEquality().equals(other._stats, _stats)&&(identical(other.sprites, sprites) || other.sprites == sprites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PokemonEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.order, order) || other.order == order)&&(identical(other.height, height) || other.height == height)&&(identical(other.baseExperience, baseExperience) || other.baseExperience == baseExperience)&&const DeepCollectionEquality().equals(other._types, _types)&&const DeepCollectionEquality().equals(other._abilities, _abilities)&&(identical(other.cries, cries) || other.cries == cries)&&const DeepCollectionEquality().equals(other._stats, _stats)&&(identical(other.sprites, sprites) || other.sprites == sprites)&&(identical(other.species, species) || other.species == species));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,weight,order,height,baseExperience,const DeepCollectionEquality().hash(_types),const DeepCollectionEquality().hash(_abilities),cries,const DeepCollectionEquality().hash(_stats),sprites);
+int get hashCode => Object.hash(runtimeType,id,name,weight,order,height,baseExperience,const DeepCollectionEquality().hash(_types),const DeepCollectionEquality().hash(_abilities),cries,const DeepCollectionEquality().hash(_stats),sprites,species);
 
 @override
 String toString() {
-  return 'PokemonEntity(id: $id, name: $name, weight: $weight, order: $order, height: $height, baseExperience: $baseExperience, types: $types, abilities: $abilities, cries: $cries, stats: $stats, sprites: $sprites)';
+  return 'PokemonEntity(id: $id, name: $name, weight: $weight, order: $order, height: $height, baseExperience: $baseExperience, types: $types, abilities: $abilities, cries: $cries, stats: $stats, sprites: $sprites, species: $species)';
 }
 
 
@@ -315,11 +329,11 @@ abstract mixin class _$PokemonEntityCopyWith<$Res> implements $PokemonEntityCopy
   factory _$PokemonEntityCopyWith(_PokemonEntity value, $Res Function(_PokemonEntity) _then) = __$PokemonEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'weight') int? weight,@JsonKey(name: 'order') int? order,@JsonKey(name: 'height') int? height,@JsonKey(name: 'base_experience') int? baseExperience,@JsonKey(name: 'types') List<TypeSlotEntity>? types,@JsonKey(name: 'abilities') List<AbilitySlotEntity>? abilities,@JsonKey(name: 'cries') CryEntity? cries,@JsonKey(name: 'stats') List<StatEntity>? stats,@JsonKey(name: 'sprites') SpriteEntity? sprites
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'weight') int? weight,@JsonKey(name: 'order') int? order,@JsonKey(name: 'height') int? height,@JsonKey(name: 'base_experience') int? baseExperience,@JsonKey(name: 'types') List<TypeSlotEntity>? types,@JsonKey(name: 'abilities') List<AbilitySlotEntity>? abilities,@JsonKey(name: 'cries') CryEntity? cries,@JsonKey(name: 'stats') List<StatEntity>? stats,@JsonKey(name: 'sprites') SpriteEntity? sprites,@JsonKey(name: 'species') SpeciesEntity? species
 });
 
 
-@override $CryEntityCopyWith<$Res>? get cries;@override $SpriteEntityCopyWith<$Res>? get sprites;
+@override $CryEntityCopyWith<$Res>? get cries;@override $SpriteEntityCopyWith<$Res>? get sprites;@override $SpeciesEntityCopyWith<$Res>? get species;
 
 }
 /// @nodoc
@@ -332,7 +346,7 @@ class __$PokemonEntityCopyWithImpl<$Res>
 
 /// Create a copy of PokemonEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? weight = freezed,Object? order = freezed,Object? height = freezed,Object? baseExperience = freezed,Object? types = freezed,Object? abilities = freezed,Object? cries = freezed,Object? stats = freezed,Object? sprites = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? weight = freezed,Object? order = freezed,Object? height = freezed,Object? baseExperience = freezed,Object? types = freezed,Object? abilities = freezed,Object? cries = freezed,Object? stats = freezed,Object? sprites = freezed,Object? species = freezed,}) {
   return _then(_PokemonEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -345,7 +359,8 @@ as List<TypeSlotEntity>?,abilities: freezed == abilities ? _self._abilities : ab
 as List<AbilitySlotEntity>?,cries: freezed == cries ? _self.cries : cries // ignore: cast_nullable_to_non_nullable
 as CryEntity?,stats: freezed == stats ? _self._stats : stats // ignore: cast_nullable_to_non_nullable
 as List<StatEntity>?,sprites: freezed == sprites ? _self.sprites : sprites // ignore: cast_nullable_to_non_nullable
-as SpriteEntity?,
+as SpriteEntity?,species: freezed == species ? _self.species : species // ignore: cast_nullable_to_non_nullable
+as SpeciesEntity?,
   ));
 }
 
@@ -372,6 +387,18 @@ $SpriteEntityCopyWith<$Res>? get sprites {
 
   return $SpriteEntityCopyWith<$Res>(_self.sprites!, (value) {
     return _then(_self.copyWith(sprites: value));
+  });
+}/// Create a copy of PokemonEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SpeciesEntityCopyWith<$Res>? get species {
+    if (_self.species == null) {
+    return null;
+  }
+
+  return $SpeciesEntityCopyWith<$Res>(_self.species!, (value) {
+    return _then(_self.copyWith(species: value));
   });
 }
 }

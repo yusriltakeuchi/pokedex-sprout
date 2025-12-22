@@ -1,9 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/button/icon_click_button.dart';
+import 'package:pokedex/core/components/click/click_item.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/gen/assets.gen.dart';
+import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_about.dart';
+import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_basestat.dart';
+import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_evolution.dart';
+import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_moves.dart';
 import 'package:pokedex/theme/theme.dart';
 
 @RoutePage()
@@ -12,12 +20,30 @@ class PokemonDetailScreen extends StatelessWidget {
 
   const PokemonDetailScreen({super.key, required this.pokemon});
 
+  String parseId() {
+    /// there is value like this url "https://pokeapi.co/api/v2/pokemon-species/4/"
+    /// i want to get the id "4" from this url
+    final url = pokemon.species?.url ?? "";
+    final segments = url.split('/');
+    if (segments.length >= 2) {
+      return segments[segments.length - 2];
+    }
+    return "0";
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = pokemon.types?.first.type?.color ?? Colors.grey;
     return Scaffold(
       backgroundColor: color,
-      body: PokemonDetailBody(pokemon: pokemon),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider<GetSpeciesBloc>(
+            create: (context) => GetSpeciesBloc()..getSpecies(parseId()),
+          ),
+        ],
+        child: PokemonDetailBody(pokemon: pokemon),
+      ),
     );
   }
 }
@@ -38,32 +64,58 @@ class PokemonDetailBody extends StatelessWidget {
   }
 }
 
-class _ContentSection extends StatelessWidget {
+class _ContentSection extends StatefulWidget {
   final PokemonEntity pokemon;
 
   const _ContentSection({required this.pokemon});
 
   @override
+  State<_ContentSection> createState() => _ContentSectionState();
+}
+
+class _ContentSectionState extends State<_ContentSection> {
+  List<String> tabs = ["About", "Base Stats", "Evolution", "Moves"];
+  int selectedTabIndex = 0;
+
+  void onTabSelected(int index) {
+    setState(() {
+      selectedTabIndex = index;
+    });
+  }
+
+  Widget mapContentTab() {
+    switch (selectedTabIndex) {
+      case 0:
+        return PokemonDetailTabAbout(pokemon: widget.pokemon);
+      case 1:
+        return PokemonDetailTabBaseStat();
+      case 2:
+        return PokemonDetailTabBaseEvolution();
+      case 3:
+        return PokemonDetailTabBaseMoves();
+      default:
+        return const SizedBox();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: false,
-      child: Padding(
-        padding: .symmetric(horizontal: AppSetting.setWidth(50)),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Space.w(100),
-            _appBarSection(),
-            Space.h(40),
-            _pokemonInfo(),
-            _pokemonImage(),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Space.w(100),
+          _appBarSection(context),
+          Space.h(40),
+          _pokemonInfo(),
+          _pokemonDetail(),
+        ],
       ),
     );
   }
 
-  Widget _pokemonImage() {
+  Widget _pokemonDetail() {
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -83,7 +135,47 @@ class _ContentSection extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSetting.setWidth(50)),
                       topRight: Radius.circular(AppSetting.setWidth(50)),
-                    )
+                    ),
+                  ),
+                  padding: .symmetric(
+                    vertical: AppSetting.setHeight(150),
+                    horizontal: AppSetting.setWidth(50),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      /// I want the tab is scrollable if the screen is small
+                      /// and the tab items are more than the screen width
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(tabs.length, (index) {
+                            final tabTitle = tabs[index];
+                            final isSelected = index == selectedTabIndex;
+                            return Padding(
+                              padding: .only(
+                                left: index == 0 ? 0 : AppSetting.setWidth(20),
+                              ),
+                              child: _TabItem(
+                                title: tabTitle,
+                                isSelected: isSelected,
+                                onClick: () => onTabSelected(index),
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+
+                      /// Content tab
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: .only(top: AppSetting.setHeight(30)),
+                            child: mapContentTab(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -91,20 +183,23 @@ class _ContentSection extends StatelessWidget {
                 top: 0,
                 left: 0,
                 right: 0,
-                child: Hero(
-                  tag: 'pokemon_image_${pokemon.id}',
-                  child: Image.network(
-                    pokemon.sprites?.other?.home?.frontDefault ?? "",
-                    width: AppSetting.setWidth(700),
-                    height: imageHeight,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Assets.images.logoFullWhite.image(
-                        width: AppSetting.setWidth(300),
-                        height: AppSetting.setHeight(300),
-                        fit: BoxFit.contain,
-                      );
-                    },
+                child: Padding(
+                  padding: .symmetric(horizontal: AppSetting.setWidth(50)),
+                  child: Hero(
+                    tag: 'pokemon_image_${widget.pokemon.id}',
+                    child: Image.network(
+                      widget.pokemon.sprites?.other?.home?.frontDefault ?? "",
+                      width: AppSetting.setWidth(700),
+                      height: imageHeight,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Assets.images.logoFullWhite.image(
+                          width: AppSetting.setWidth(300),
+                          height: AppSetting.setHeight(300),
+                          fit: BoxFit.contain,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -116,41 +211,47 @@ class _ContentSection extends StatelessWidget {
   }
 
   Widget _pokemonInfo() {
-    return Row(
-      mainAxisAlignment: .spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text(
-              pokemon.name?.capitalizeMultipleWords() ?? "Unknown",
-              style: TextStyle(
-                fontSize: AppSetting.setFontSize(70),
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+    return Padding(
+      padding: .symmetric(horizontal: AppSetting.setWidth(50)),
+      child: Row(
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                widget.pokemon.name?.capitalizeMultipleWords() ?? "Unknown",
+                style: TextStyle(
+                  fontSize: AppSetting.setFontSize(70),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Space.h(20),
-            Row(
-              children: List.generate(pokemon.types?.length ?? 0, (index) {
-                final type = pokemon.types?[index].type?.name ?? "unknown";
-                return Padding(
-                  padding: EdgeInsets.only(right: AppSetting.setWidth(20)),
-                  child: _typeItem(type),
-                );
-              }),
-            ),
-          ],
-        ),
-        Text(
-          "#${pokemon.id.toString().padLeft(3, '0')}",
-          style: TextStyle(
-            fontSize: AppSetting.setFontSize(45),
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+              Space.h(20),
+              Row(
+                children: List.generate(widget.pokemon.types?.length ?? 0, (
+                  index,
+                ) {
+                  final type =
+                      widget.pokemon.types?[index].type?.name ?? "unknown";
+                  return Padding(
+                    padding: EdgeInsets.only(right: AppSetting.setWidth(20)),
+                    child: _typeItem(type),
+                  );
+                }),
+              ),
+            ],
           ),
-        ),
-      ],
+          Text(
+            "#${widget.pokemon.id.toString().padLeft(3, '0')}",
+            style: TextStyle(
+              fontSize: AppSetting.setFontSize(45),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -174,22 +275,78 @@ class _ContentSection extends StatelessWidget {
     );
   }
 
-  Widget _appBarSection() {
-    return Row(
-      mainAxisAlignment: .spaceBetween,
-      children: [
-        Assets.icons.iconArrowLeft.image(
-          width: AppSetting.setWidth(70),
-          height: AppSetting.setHeight(70),
-          color: Colors.white,
+  Widget _appBarSection(BuildContext context) {
+    return Padding(
+      padding: .symmetric(horizontal: AppSetting.setWidth(50)),
+      child: Row(
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          IconClickButton(
+            icon: Assets.icons.iconArrowLeft.image(
+              width: AppSetting.setWidth(70),
+              height: AppSetting.setHeight(70),
+              color: Colors.white,
+            ),
+            onClick: () => context.router.maybePop(),
+          ),
+          Image.asset(
+            Assets.icons.iconFavorite.path,
+            width: AppSetting.setWidth(60),
+            height: AppSetting.setHeight(60),
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TabItem extends StatelessWidget {
+  final String title;
+  final bool isSelected;
+  final VoidCallback onClick;
+
+  const _TabItem({
+    required this.title,
+    required this.isSelected,
+    required this.onClick,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Clickable(
+      onClick: () => onClick(),
+      borderRadius: .circular(10),
+      child: Padding(
+        padding: .symmetric(
+          horizontal: AppSetting.setWidth(20),
+          vertical: AppSetting.setHeight(10),
         ),
-        Image.asset(
-          Assets.icons.iconFavorite.path,
-          width: AppSetting.setWidth(60),
-          height: AppSetting.setHeight(60),
-          color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: MyTheme.style.subtitle.copyWith(
+                fontSize: AppSetting.setFontSize(40),
+                color: isSelected
+                    ? MyTheme.color.blackWhite
+                    : MyTheme.color.greyDark.withValues(alpha: 0.5),
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            Space.h(20),
+            Container(
+              height: AppSetting.setHeight(5),
+              width: AppSetting.setWidth(100),
+              decoration: BoxDecoration(
+                color: isSelected ? MyTheme.color.primary : Colors.transparent,
+                borderRadius: .circular(2.5),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

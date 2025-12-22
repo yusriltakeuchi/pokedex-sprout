@@ -26,9 +26,17 @@ class $AssetsIconsGen {
   AssetGenImage get iconFavoriteFilled =>
       const AssetGenImage('assets/icons/icon_favorite_filled.png');
 
+  /// File path: assets/icons/icon_female.png
+  AssetGenImage get iconFemale =>
+      const AssetGenImage('assets/icons/icon_female.png');
+
   /// File path: assets/icons/icon_filter.png
   AssetGenImage get iconFilter =>
       const AssetGenImage('assets/icons/icon_filter.png');
+
+  /// File path: assets/icons/icon_male.png
+  AssetGenImage get iconMale =>
+      const AssetGenImage('assets/icons/icon_male.png');
 
   /// File path: assets/icons/icon_pokeball.png
   AssetGenImage get iconPokeball =>
@@ -39,7 +47,9 @@ class $AssetsIconsGen {
     iconArrowLeft,
     iconFavorite,
     iconFavoriteFilled,
+    iconFemale,
     iconFilter,
+    iconMale,
     iconPokeball,
   ];
 }

@@ -34,9 +34,13 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> {
+  bool isOnTop = true;
   ScrollController? _scrollController;
+
+  /// Threshold to trigger load more
   final double threshold = 200.0;
 
+  /// Handling scroll listener to load more data
   void _scrollListener() {
     if (!_scrollController!.hasClients) return;
     if (_scrollController!.position.pixels >=
@@ -45,6 +49,21 @@ class _HomeBodyState extends State<HomeBody> {
       if (mounted) {
         /// Load more pokemons
         context.read<GetPokemonBloc>().loadMore();
+      }
+    }
+
+    /// Handle on top or scroll
+    if (_scrollController!.position.pixels > 0) {
+      if (isOnTop) {
+        setState(() {
+          isOnTop = false;
+        });
+      }
+    } else {
+      if (!isOnTop) {
+        setState(() {
+          isOnTop = true;
+        });
       }
     }
   }
@@ -67,54 +86,109 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
-        BaseFilterDTO(limit: 20, offset: 0),
-      ),
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        physics: const BouncingScrollPhysics(),
-        child: Stack(
-          children: [
-            _BackgroundHeaderColor(),
-            SafeArea(
-              child: Padding(
-                padding: .symmetric(
-                  horizontal: AppSetting.setWidth(40),
-                  vertical: AppSetting.setHeight(20),
-                ),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: .spaceBetween,
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
+            BaseFilterDTO(limit: 20, offset: 0),
+          ),
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
+            child: Stack(
+              children: [
+                _BackgroundHeaderColor(),
+                SafeArea(
+                  child: Padding(
+                    padding: .symmetric(
+                      horizontal: AppSetting.setWidth(40),
+                      vertical: AppSetting.setHeight(20),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: .start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            "Pokedex",
-                            style: MyTheme.style.title.copyWith(
-                              fontSize: AppSetting.setFontSize(60),
-                              color: MyTheme.color.white,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Assets.icons.iconFilter.image(
-                            width: AppSetting.setWidth(60),
-                            height: AppSetting.setHeight(60),
-                            color: MyTheme.color.white,
-                          ),
-                          onPressed: () {},
-                        ),
+                        _AppBarContent(),
+                        Space.h(30),
+                        _PokemonSections(),
                       ],
                     ),
-                    Space.h(30),
-                    _PokemonSections(),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: _AppBarCustom(isOnTop: isOnTop),
+        ),
+      ],
+    );
+  }
+}
+
+class _AppBarContent extends StatelessWidget {
+  const _AppBarContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: .spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            "Pokedex",
+            style: MyTheme.style.title.copyWith(
+              fontSize: AppSetting.setFontSize(60),
+              color: MyTheme.color.white,
+            ),
+          ),
+        ),
+        IconButton(
+          icon: Assets.icons.iconFilter.image(
+            width: AppSetting.setWidth(60),
+            height: AppSetting.setHeight(60),
+            color: MyTheme.color.white,
+          ),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+}
+
+class _AppBarCustom extends StatelessWidget {
+  final bool isOnTop;
+
+  const _AppBarCustom({required this.isOnTop});
+
+  @override
+  Widget build(BuildContext context) {
+    if (isOnTop) {
+      return const SizedBox();
+    }
+    return Container(
+      decoration: BoxDecoration(
+        color: MyTheme.color.primary,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12.withValues(alpha: 0.05),
+            blurRadius: 5,
+            spreadRadius: 3,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: .symmetric(
+            horizontal: AppSetting.setWidth(40),
+            vertical: AppSetting.setHeight(15),
+          ),
+          child: _AppBarContent(),
         ),
       ),
     );

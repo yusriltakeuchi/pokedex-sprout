@@ -1,4 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:pokedex/core/networks/api_client.dart';
+import 'package:pokedex/infrastructure/datasource/pokemon/pokemon_datasource.dart';
+import 'package:pokedex/infrastructure/repositories/pokemon/pokemon_repository_impl.dart';
 import 'package:pokedex/routing/route.dart';
 
 GetIt inject = GetIt.instance;
@@ -8,19 +11,19 @@ Future<void> setupInjector() async {
   inject.registerSingleton<AppRouter>(AppRouter());
 
   /// Core api client
-  // inject.registerLazySingleton(() => ApiClient());
+  inject.registerLazySingleton(() => ApiClient());
 
   /// Registering data source
-  // inject.registerLazySingleton<ChannelDataSource>(
-  //   () => ChannelDataSource(inject<ApiClient>()),
-  // );
+  inject.registerLazySingleton<PokemonDataSource>(
+    () => PokemonDataSource(inject<ApiClient>()),
+  );
   /// Register bloc
   // inject.registerLazySingleton<PageBloc>(() => PageBloc()..initPage());
 
   /// Register repository
-  // inject.registerLazySingleton<ChannelRepositoryImpl>(
-  //   () => ChannelRepositoryImpl(
-  //     inject<ChannelDataSource>(),
-  //   ),
-  // );
+  inject.registerLazySingleton<PokemonRepositoryImpl>(
+    () => PokemonRepositoryImpl(
+      inject<PokemonDataSource>(),
+    ),
+  );
 }

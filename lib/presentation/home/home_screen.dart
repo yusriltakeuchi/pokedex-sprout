@@ -21,41 +21,58 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: .symmetric(
-          horizontal: AppSetting.setWidth(30),
-          vertical: AppSetting.setHeight(20),
-        ),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Row(
-              mainAxisAlignment: .spaceBetween,
+    return Stack(
+      children: [
+        _BackgroundHeaderColor(),
+        SafeArea(
+          child: Padding(
+            padding: .symmetric(
+              horizontal: AppSetting.setWidth(30),
+              vertical: AppSetting.setHeight(20),
+            ),
+            child: Column(
+              crossAxisAlignment: .start,
               children: [
-                Expanded(
-                  child: Text(
-                    "Pokedex Sprout",
-                    style: MyTheme.style.title.copyWith(
-                      fontSize: AppSetting.setFontSize(55),
-                      color: MyTheme.color.black,
+                Row(
+                  mainAxisAlignment: .spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Pokedex",
+                        style: MyTheme.style.title.copyWith(
+                          fontSize: AppSetting.setFontSize(60),
+                          color: MyTheme.color.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                IconButton(
-                  icon: Assets.icons.iconFilter.image(
-                    width: AppSetting.setWidth(60),
-                    height: AppSetting.setHeight(60),
-                    color: MyTheme.color.primary,
-                  ),
-                  onPressed: () {},
-                ),
+                    IconButton(
+                      icon: Assets.icons.iconFilter.image(
+                        width: AppSetting.setWidth(60),
+                        height: AppSetting.setHeight(60),
+                        color: MyTheme.color.white,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
 
+class _BackgroundHeaderColor extends StatelessWidget {
+  const _BackgroundHeaderColor();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: AppSetting.deviceHeight * 0.2,
+      color: MyTheme.color.primary,
+    );
+  }
+}

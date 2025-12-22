@@ -12,8 +12,9 @@ class PColor {
   PColor._internal();
 
   // Define colors with default values
-  Color primary = const Color(0xffFF0000);
-  Color secondary = const Color(0xffFFCF71);
+  Color primary = const Color(0xfff6bd20);
+  Color primaryLight = const Color(0xfff6e652);
+  Color secondary = const Color(0xff9c5200);
   Color success = const Color(0xFF4BAC87);
   Color info = const Color(0xFF05BFDB);
   Color warning = const Color(0xFFFFD93D);

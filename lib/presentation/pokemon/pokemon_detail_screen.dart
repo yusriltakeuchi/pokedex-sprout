@@ -244,7 +244,7 @@ class _ContentSectionState extends State<_ContentSection> {
             ],
           ),
           Text(
-            "#${widget.pokemon.id.toString().padLeft(3, '0')}",
+            "#${widget.pokemon.id.toString().padLeft(4, '0')}",
             style: TextStyle(
               fontSize: AppSetting.setFontSize(45),
               color: Colors.white,

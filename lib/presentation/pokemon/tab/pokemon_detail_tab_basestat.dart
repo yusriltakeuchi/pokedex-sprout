@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/loading/loading_listview.dart';
 import 'package:pokedex/domain/entities/stat/stat_entity.dart';
+import 'package:pokedex/domain/entities/type/type_defense_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/theme/theme.dart';
 
@@ -83,8 +87,116 @@ class PokemonDetailTabBaseStat extends StatelessWidget {
             color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
             fontSize: AppSetting.setFontSize(40),
           ),
-        )
+        ),
+        BlocBuilder<GetTypeDefensesBloc, GetTypeDefensesState>(
+          builder: (context, state) {
+            return state.maybeWhen(
+              orElse: () => const SizedBox(),
+              loading: () => LoadingListView(length: 3),
+              loaded: (vulnerabilities, resistances, immunities) {
+                return Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    _DefensesCard(
+                      title: "Vulnerable to",
+                      color: MyTheme.color.danger,
+                      types: vulnerabilities,
+                    ),
+                    Space.h(30),
+                    _DefensesCard(
+                      title: "Resistant to",
+                      color: MyTheme.color.success,
+                      types: resistances,
+                    ),
+                    Space.h(30),
+                    _DefensesCard(
+                      title: "Immune to",
+                      color: MyTheme.color.blackWhite,
+                      types: immunities,
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ],
+    );
+  }
+}
+
+class _DefensesCard extends StatelessWidget {
+  final String title;
+  final Color color;
+  final List<TypeDefenseEntity> types;
+
+  const _DefensesCard({
+    required this.title,
+    required this.color,
+    required this.types,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: .circular(10),
+        color: MyTheme.color.white,
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          Container(
+            color: color,
+            child: Padding(
+              padding: .symmetric(
+                vertical: AppSetting.setHeight(20),
+                horizontal: AppSetting.setWidth(30),
+              ),
+              child: Text(
+                title,
+                style: MyTheme.style.title.copyWith(
+                  color: MyTheme.color.white,
+                  fontSize: AppSetting.setFontSize(40),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: .symmetric(
+              vertical: AppSetting.setHeight(20),
+              horizontal: AppSetting.setWidth(30),
+            ),
+            child: Wrap(
+              children: types
+                  .map(
+                    (e) => Container(
+                      margin: EdgeInsets.only(
+                        right: AppSetting.setWidth(10),
+                        bottom: AppSetting.setHeight(10),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppSetting.setHeight(10),
+                        horizontal: AppSetting.setWidth(15),
+                      ),
+                      decoration: BoxDecoration(
+                        color: MyTheme.color.primary.withValues(alpha: 0.1),
+                        borderRadius: .circular(30),
+                      ),
+                      child: Text(
+                        e.name?.capitalizeMultipleWords() ?? "-",
+                        style: MyTheme.style.subtitle.copyWith(
+                          color: MyTheme.color.primary,
+                          fontSize: AppSetting.setFontSize(35),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

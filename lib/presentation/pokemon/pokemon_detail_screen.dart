@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
+import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/core/components/button/icon_click_button.dart';
 import 'package:pokedex/core/components/click/click_item.dart';
@@ -40,6 +41,10 @@ class PokemonDetailScreen extends StatelessWidget {
         providers: [
           BlocProvider<GetSpeciesBloc>(
             create: (context) => GetSpeciesBloc()..getSpecies(parseId()),
+          ),
+          BlocProvider<GetTypeDefensesBloc>(
+            create: (context) => GetTypeDefensesBloc()
+              ..getTypeDefenses(pokemon.types!.map((e) => e.type!).toList()),
           ),
         ],
         child: PokemonDetailBody(pokemon: pokemon),
@@ -185,13 +190,17 @@ class _ContentSectionState extends State<_ContentSection> {
                             SingleChildScrollView(
                               child: Padding(
                                 padding: .only(top: AppSetting.setHeight(30)),
-                                child: PokemonDetailTabAbout(pokemon: widget.pokemon),
+                                child: PokemonDetailTabAbout(
+                                  pokemon: widget.pokemon,
+                                ),
                               ),
                             ),
                             SingleChildScrollView(
                               child: Padding(
                                 padding: .only(top: AppSetting.setHeight(30)),
-                                child: PokemonDetailTabBaseStat(stats: widget.pokemon.stats ?? [],),
+                                child: PokemonDetailTabBaseStat(
+                                  stats: widget.pokemon.stats ?? [],
+                                ),
                               ),
                             ),
                             SingleChildScrollView(

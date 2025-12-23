@@ -128,7 +128,7 @@ return loaded(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( String message)?  error,TResult Function( List<TypeEntity> vulnerabilities,  List<TypeEntity> resistances,  List<TypeEntity> immunities)?  loaded,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( String message)?  error,TResult Function( List<TypeDefenseEntity> vulnerabilities,  List<TypeDefenseEntity> resistances,  List<TypeDefenseEntity> immunities)?  loaded,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetTypeDefensesInitialState() when initial != null:
 return initial();case _GetGetTypeDefensesLoadingState() when loading != null:
@@ -152,7 +152,7 @@ return loaded(_that.vulnerabilities,_that.resistances,_that.immunities);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( String message)  error,required TResult Function( List<TypeEntity> vulnerabilities,  List<TypeEntity> resistances,  List<TypeEntity> immunities)  loaded,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( String message)  error,required TResult Function( List<TypeDefenseEntity> vulnerabilities,  List<TypeDefenseEntity> resistances,  List<TypeDefenseEntity> immunities)  loaded,}) {final _that = this;
 switch (_that) {
 case _GetTypeDefensesInitialState():
 return initial();case _GetGetTypeDefensesLoadingState():
@@ -175,7 +175,7 @@ return loaded(_that.vulnerabilities,_that.resistances,_that.immunities);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( String message)?  error,TResult? Function( List<TypeEntity> vulnerabilities,  List<TypeEntity> resistances,  List<TypeEntity> immunities)?  loaded,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( String message)?  error,TResult? Function( List<TypeDefenseEntity> vulnerabilities,  List<TypeDefenseEntity> resistances,  List<TypeDefenseEntity> immunities)?  loaded,}) {final _that = this;
 switch (_that) {
 case _GetTypeDefensesInitialState() when initial != null:
 return initial();case _GetGetTypeDefensesLoadingState() when loading != null:
@@ -323,25 +323,25 @@ as String,
 
 
 class _GetGetTypeDefensesLoadedState implements GetTypeDefensesState {
-  const _GetGetTypeDefensesLoadedState({required final  List<TypeEntity> vulnerabilities, required final  List<TypeEntity> resistances, required final  List<TypeEntity> immunities}): _vulnerabilities = vulnerabilities,_resistances = resistances,_immunities = immunities;
+  const _GetGetTypeDefensesLoadedState({required final  List<TypeDefenseEntity> vulnerabilities, required final  List<TypeDefenseEntity> resistances, required final  List<TypeDefenseEntity> immunities}): _vulnerabilities = vulnerabilities,_resistances = resistances,_immunities = immunities;
   
 
- final  List<TypeEntity> _vulnerabilities;
- List<TypeEntity> get vulnerabilities {
+ final  List<TypeDefenseEntity> _vulnerabilities;
+ List<TypeDefenseEntity> get vulnerabilities {
   if (_vulnerabilities is EqualUnmodifiableListView) return _vulnerabilities;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_vulnerabilities);
 }
 
- final  List<TypeEntity> _resistances;
- List<TypeEntity> get resistances {
+ final  List<TypeDefenseEntity> _resistances;
+ List<TypeDefenseEntity> get resistances {
   if (_resistances is EqualUnmodifiableListView) return _resistances;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_resistances);
 }
 
- final  List<TypeEntity> _immunities;
- List<TypeEntity> get immunities {
+ final  List<TypeDefenseEntity> _immunities;
+ List<TypeDefenseEntity> get immunities {
   if (_immunities is EqualUnmodifiableListView) return _immunities;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_immunities);
@@ -378,7 +378,7 @@ abstract mixin class _$GetGetTypeDefensesLoadedStateCopyWith<$Res> implements $G
   factory _$GetGetTypeDefensesLoadedStateCopyWith(_GetGetTypeDefensesLoadedState value, $Res Function(_GetGetTypeDefensesLoadedState) _then) = __$GetGetTypeDefensesLoadedStateCopyWithImpl;
 @useResult
 $Res call({
- List<TypeEntity> vulnerabilities, List<TypeEntity> resistances, List<TypeEntity> immunities
+ List<TypeDefenseEntity> vulnerabilities, List<TypeDefenseEntity> resistances, List<TypeDefenseEntity> immunities
 });
 
 
@@ -398,9 +398,9 @@ class __$GetGetTypeDefensesLoadedStateCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? vulnerabilities = null,Object? resistances = null,Object? immunities = null,}) {
   return _then(_GetGetTypeDefensesLoadedState(
 vulnerabilities: null == vulnerabilities ? _self._vulnerabilities : vulnerabilities // ignore: cast_nullable_to_non_nullable
-as List<TypeEntity>,resistances: null == resistances ? _self._resistances : resistances // ignore: cast_nullable_to_non_nullable
-as List<TypeEntity>,immunities: null == immunities ? _self._immunities : immunities // ignore: cast_nullable_to_non_nullable
-as List<TypeEntity>,
+as List<TypeDefenseEntity>,resistances: null == resistances ? _self._resistances : resistances // ignore: cast_nullable_to_non_nullable
+as List<TypeDefenseEntity>,immunities: null == immunities ? _self._immunities : immunities // ignore: cast_nullable_to_non_nullable
+as List<TypeDefenseEntity>,
   ));
 }
 

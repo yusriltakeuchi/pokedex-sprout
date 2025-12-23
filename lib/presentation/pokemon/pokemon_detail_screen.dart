@@ -88,7 +88,7 @@ class _ContentSectionState extends State<_ContentSection> {
       case 0:
         return PokemonDetailTabAbout(pokemon: widget.pokemon);
       case 1:
-        return PokemonDetailTabBaseStat();
+        return PokemonDetailTabBaseStat(stats: widget.pokemon.stats ?? [],);
       case 2:
         return PokemonDetailTabBaseEvolution();
       case 3:

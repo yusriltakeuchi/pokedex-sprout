@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/pokemon/get_pokemon_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/idle/idle_item.dart';
 import 'package:pokedex/core/components/loading/loading_grid.dart';
 import 'package:pokedex/core/components/pokemon/pokemon_item.dart';
 import 'package:pokedex/domain/dto/base_filter/base_filter_dto.dart';
@@ -205,8 +206,28 @@ class _PokemonSections extends StatelessWidget {
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () => const SizedBox(),
+          error: (message) => IdleNoItemCenter(
+            title: "Something went wrong",
+            iconPath: Assets.images.illustration404.path,
+            color: MyTheme.color.blackWhite,
+            useCenterText: true,
+            onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
+              BaseFilterDTO(limit: 20, offset: 0),
+            ),
+          ),
           loading: () => LoadingGrid(crossAxis: 2, height: 300, length: 8),
           loaded: (pokemons, offset, limit, hasReachedMax, onLoadMore) {
+            if (pokemons.isEmpty) {
+              return IdleNoItemCenter(
+                title: "No Pokemons Found",
+                iconPath: Assets.images.illustration404.path,
+                color: MyTheme.color.blackWhite,
+                useCenterText: true,
+                onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
+                  BaseFilterDTO(limit: 20, offset: 0)
+                ),
+              );
+            }
             return Column(
               crossAxisAlignment: .start,
               children: [

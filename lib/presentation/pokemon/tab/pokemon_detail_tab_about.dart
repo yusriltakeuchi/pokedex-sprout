@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/core/components/loading/loading_listview.dart';
-import 'package:pokedex/core/components/loading/loading_singlebox.dart';
 import 'package:pokedex/domain/entities/gender/gender_ratio_entity.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
@@ -227,7 +226,7 @@ class _LabelHorizontal extends StatelessWidget {
           child: Text(
             title,
             style: MyTheme.style.subtitle.copyWith(
-              color: MyTheme.color.grey.withValues(alpha: 0.5),
+              color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
               fontSize: AppSetting.setFontSize(40),
             ),
           ),

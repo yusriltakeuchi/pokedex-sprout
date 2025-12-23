@@ -57,6 +57,10 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/illustration_404.png
+  AssetGenImage get illustration404 =>
+      const AssetGenImage('assets/images/illustration_404.png');
+
   /// File path: assets/images/logo_full.png
   AssetGenImage get logoFull =>
       const AssetGenImage('assets/images/logo_full.png');
@@ -66,7 +70,7 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/logo_full_white.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [logoFull, logoFullWhite];
+  List<AssetGenImage> get values => [illustration404, logoFull, logoFullWhite];
 }
 
 class Assets {

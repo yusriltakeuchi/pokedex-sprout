@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pokedex/domain/entities/evolution/evolution_detail_entity.dart';
+import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/domain/entities/species/species_entity.dart';
 
 part 'evolution_entity.freezed.dart';
@@ -13,6 +14,7 @@ abstract class EvolutionEntity with _$EvolutionEntity {
     @JsonKey(name: 'evolves_to') List<EvolutionEntity>? evolvesTo,
     @JsonKey(name: 'is_baby') bool? isBaby,
     @JsonKey(name: 'species') SpeciesEntity? species,
+    @JsonKey(name: 'pokemon') PokemonEntity? detailPokemon,
   }) = _EvolutionEntity;
 
   factory EvolutionEntity.fromJson(Map<String, dynamic> json) =>

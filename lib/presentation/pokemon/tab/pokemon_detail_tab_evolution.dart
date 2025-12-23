@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/idle/idle_item.dart';
 import 'package:pokedex/core/components/loading/loading_grid.dart';
 import 'package:pokedex/core/components/pokemon/pokemon_stage_item.dart';
 import 'package:pokedex/domain/entities/evolution/evolution_detail_entity.dart';
 import 'package:pokedex/domain/entities/evolution/evolution_entity.dart';
+import 'package:pokedex/extension/string_extension.dart';
+import 'package:pokedex/gen/assets.gen.dart';
 import 'package:pokedex/theme/theme.dart';
 
 class PokemonDetailTabBaseEvolution extends StatelessWidget {
@@ -27,11 +30,24 @@ class PokemonDetailTabBaseEvolution extends StatelessWidget {
         BlocBuilder<EvolutionChainBloc, EvolutionChainState>(
           builder: (context, state) {
             return state.maybeWhen(
-              orElse: () => const SizedBox(),
-              loading: () => const LoadingGrid(length: 4, crossAxis: 2),
+              orElse: () => const LoadingGrid(length: 4, crossAxis: 2, height: 350,),
+              error: (message) => IdleNoItemCenter(
+                title: "No Evolution Found",
+                iconPath: Assets.images.illustration404.path,
+                color: MyTheme.color.blackWhite,
+                useCenterText: true,
+              ),
+              loading: () => const LoadingGrid(length: 4, crossAxis: 2, height: 350,),
               loaded: (evolutionChain) {
+                if (evolutionChain.chain?.evolvesTo?.isEmpty == true) {
+                  return IdleNoItemCenter(
+                    title: "No Evolution",
+                    iconPath: Assets.images.illustration404.path,
+                    color: MyTheme.color.blackWhite,
+                    useCenterText: true,
+                  );
+                }
                 final stages = flattenEvolution(evolutionChain.chain);
-
                 return Column(
                   children: List.generate(stages.length - 1, (index) {
                     final from = stages[index];
@@ -41,7 +57,7 @@ class PokemonDetailTabBaseEvolution extends StatelessWidget {
                       padding: .only(
                         bottom: index == stages.length - 2
                             ? 0
-                            : AppSetting.setHeight(60),
+                            : AppSetting.setHeight(30),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,6 +121,37 @@ class _EvolutionArrow extends StatelessWidget {
               'Lv ${detail!.minLevel}',
               style: MyTheme.style.title.copyWith(
                 fontSize: AppSetting.setFontSize(35),
+                color: MyTheme.color.blackWhite,
+              ),
+            ),
+          ],
+          if (detail?.item != null) ...[
+            Space.h(8),
+            Text(
+              'Item: \n${detail!.item!.name?.capitalizeMultipleWords()}',
+              textAlign: TextAlign.center,
+              style: MyTheme.style.title.copyWith(
+                fontSize: AppSetting.setFontSize(30),
+                color: MyTheme.color.blackWhite,
+              ),
+            ),
+          ],
+          if (detail?.trigger?.name == "trade") ...[
+            Space.h(8),
+            Text(
+              'Trade',
+              style: MyTheme.style.title.copyWith(
+                fontSize: AppSetting.setFontSize(30),
+                color: MyTheme.color.blackWhite,
+              ),
+            ),
+          ],
+          if (detail?.minHappiness != null) ...[
+            Space.h(8),
+            Text(
+              'Happiness ${detail!.minHappiness}',
+              style: MyTheme.style.title.copyWith(
+                fontSize: AppSetting.setFontSize(30),
                 color: MyTheme.color.blackWhite,
               ),
             ),

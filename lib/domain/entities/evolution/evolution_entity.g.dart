@@ -20,6 +20,9 @@ _EvolutionEntity _$EvolutionEntityFromJson(Map<String, dynamic> json) =>
       species: json['species'] == null
           ? null
           : SpeciesEntity.fromJson(json['species'] as Map<String, dynamic>),
+      detailPokemon: json['pokemon'] == null
+          ? null
+          : PokemonEntity.fromJson(json['pokemon'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$EvolutionEntityToJson(_EvolutionEntity instance) =>
@@ -28,4 +31,5 @@ Map<String, dynamic> _$EvolutionEntityToJson(_EvolutionEntity instance) =>
       'evolves_to': instance.evolvesTo,
       'is_baby': instance.isBaby,
       'species': instance.species,
+      'pokemon': instance.detailPokemon,
     };

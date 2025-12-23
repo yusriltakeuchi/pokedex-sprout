@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
 import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
+import 'package:pokedex/bloc/pokemon/get_pokemon_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
@@ -46,7 +47,22 @@ class PokemonDetailScreen extends StatelessWidget {
             create: (context) => EvolutionChainBloc(),
           ),
         ],
-        child: PokemonDetailBody(pokemon: pokemon),
+        child: BlocListener<GetSpeciesBloc, GetSpeciesState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              loaded: (species) {
+                final evolutionId = HelperUtils.instance.parseUrlId(
+                  species.evolutionChain?.url ?? "",
+                );
+                context.read<EvolutionChainBloc>().getEvolutionChain(
+                  evolutionId,
+                );
+              },
+            );
+          },
+          child: PokemonDetailBody(pokemon: pokemon),
+        ),
       ),
     );
   }

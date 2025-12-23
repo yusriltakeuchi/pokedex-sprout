@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EvolutionEntity {
 
-@JsonKey(name: 'evolution_details') List<EvolutionDetailEntity>? get evolutionDetails;@JsonKey(name: 'evolves_to') List<EvolutionEntity>? get evolvesTo;@JsonKey(name: 'is_baby') bool? get isBaby;@JsonKey(name: 'species') SpeciesEntity? get species;
+@JsonKey(name: 'evolution_details') List<EvolutionDetailEntity>? get evolutionDetails;@JsonKey(name: 'evolves_to') List<EvolutionEntity>? get evolvesTo;@JsonKey(name: 'is_baby') bool? get isBaby;@JsonKey(name: 'species') SpeciesEntity? get species;@JsonKey(name: 'pokemon') PokemonEntity? get detailPokemon;
 /// Create a copy of EvolutionEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EvolutionEntityCopyWith<EvolutionEntity> get copyWith => _$EvolutionEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EvolutionEntity&&const DeepCollectionEquality().equals(other.evolutionDetails, evolutionDetails)&&const DeepCollectionEquality().equals(other.evolvesTo, evolvesTo)&&(identical(other.isBaby, isBaby) || other.isBaby == isBaby)&&(identical(other.species, species) || other.species == species));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EvolutionEntity&&const DeepCollectionEquality().equals(other.evolutionDetails, evolutionDetails)&&const DeepCollectionEquality().equals(other.evolvesTo, evolvesTo)&&(identical(other.isBaby, isBaby) || other.isBaby == isBaby)&&(identical(other.species, species) || other.species == species)&&(identical(other.detailPokemon, detailPokemon) || other.detailPokemon == detailPokemon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(evolutionDetails),const DeepCollectionEquality().hash(evolvesTo),isBaby,species);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(evolutionDetails),const DeepCollectionEquality().hash(evolvesTo),isBaby,species,detailPokemon);
 
 @override
 String toString() {
-  return 'EvolutionEntity(evolutionDetails: $evolutionDetails, evolvesTo: $evolvesTo, isBaby: $isBaby, species: $species)';
+  return 'EvolutionEntity(evolutionDetails: $evolutionDetails, evolvesTo: $evolvesTo, isBaby: $isBaby, species: $species, detailPokemon: $detailPokemon)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $EvolutionEntityCopyWith<$Res>  {
   factory $EvolutionEntityCopyWith(EvolutionEntity value, $Res Function(EvolutionEntity) _then) = _$EvolutionEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'evolution_details') List<EvolutionDetailEntity>? evolutionDetails,@JsonKey(name: 'evolves_to') List<EvolutionEntity>? evolvesTo,@JsonKey(name: 'is_baby') bool? isBaby,@JsonKey(name: 'species') SpeciesEntity? species
+@JsonKey(name: 'evolution_details') List<EvolutionDetailEntity>? evolutionDetails,@JsonKey(name: 'evolves_to') List<EvolutionEntity>? evolvesTo,@JsonKey(name: 'is_baby') bool? isBaby,@JsonKey(name: 'species') SpeciesEntity? species,@JsonKey(name: 'pokemon') PokemonEntity? detailPokemon
 });
 
 
-$SpeciesEntityCopyWith<$Res>? get species;
+$SpeciesEntityCopyWith<$Res>? get species;$PokemonEntityCopyWith<$Res>? get detailPokemon;
 
 }
 /// @nodoc
@@ -65,13 +65,14 @@ class _$EvolutionEntityCopyWithImpl<$Res>
 
 /// Create a copy of EvolutionEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? evolutionDetails = freezed,Object? evolvesTo = freezed,Object? isBaby = freezed,Object? species = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? evolutionDetails = freezed,Object? evolvesTo = freezed,Object? isBaby = freezed,Object? species = freezed,Object? detailPokemon = freezed,}) {
   return _then(_self.copyWith(
 evolutionDetails: freezed == evolutionDetails ? _self.evolutionDetails : evolutionDetails // ignore: cast_nullable_to_non_nullable
 as List<EvolutionDetailEntity>?,evolvesTo: freezed == evolvesTo ? _self.evolvesTo : evolvesTo // ignore: cast_nullable_to_non_nullable
 as List<EvolutionEntity>?,isBaby: freezed == isBaby ? _self.isBaby : isBaby // ignore: cast_nullable_to_non_nullable
 as bool?,species: freezed == species ? _self.species : species // ignore: cast_nullable_to_non_nullable
-as SpeciesEntity?,
+as SpeciesEntity?,detailPokemon: freezed == detailPokemon ? _self.detailPokemon : detailPokemon // ignore: cast_nullable_to_non_nullable
+as PokemonEntity?,
   ));
 }
 /// Create a copy of EvolutionEntity
@@ -85,6 +86,18 @@ $SpeciesEntityCopyWith<$Res>? get species {
 
   return $SpeciesEntityCopyWith<$Res>(_self.species!, (value) {
     return _then(_self.copyWith(species: value));
+  });
+}/// Create a copy of EvolutionEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PokemonEntityCopyWith<$Res>? get detailPokemon {
+    if (_self.detailPokemon == null) {
+    return null;
+  }
+
+  return $PokemonEntityCopyWith<$Res>(_self.detailPokemon!, (value) {
+    return _then(_self.copyWith(detailPokemon: value));
   });
 }
 }
@@ -168,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'evolution_details')  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to')  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby')  bool? isBaby, @JsonKey(name: 'species')  SpeciesEntity? species)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'evolution_details')  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to')  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby')  bool? isBaby, @JsonKey(name: 'species')  SpeciesEntity? species, @JsonKey(name: 'pokemon')  PokemonEntity? detailPokemon)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EvolutionEntity() when $default != null:
-return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.species);case _:
+return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.species,_that.detailPokemon);case _:
   return orElse();
 
 }
@@ -189,10 +202,10 @@ return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.specie
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'evolution_details')  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to')  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby')  bool? isBaby, @JsonKey(name: 'species')  SpeciesEntity? species)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'evolution_details')  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to')  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby')  bool? isBaby, @JsonKey(name: 'species')  SpeciesEntity? species, @JsonKey(name: 'pokemon')  PokemonEntity? detailPokemon)  $default,) {final _that = this;
 switch (_that) {
 case _EvolutionEntity():
-return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.species);case _:
+return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.species,_that.detailPokemon);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +222,10 @@ return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.specie
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'evolution_details')  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to')  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby')  bool? isBaby, @JsonKey(name: 'species')  SpeciesEntity? species)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'evolution_details')  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to')  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby')  bool? isBaby, @JsonKey(name: 'species')  SpeciesEntity? species, @JsonKey(name: 'pokemon')  PokemonEntity? detailPokemon)?  $default,) {final _that = this;
 switch (_that) {
 case _EvolutionEntity() when $default != null:
-return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.species);case _:
+return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.species,_that.detailPokemon);case _:
   return null;
 
 }
@@ -224,7 +237,7 @@ return $default(_that.evolutionDetails,_that.evolvesTo,_that.isBaby,_that.specie
 @JsonSerializable()
 
 class _EvolutionEntity implements EvolutionEntity {
-  const _EvolutionEntity({@JsonKey(name: 'evolution_details') final  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to') final  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby') this.isBaby, @JsonKey(name: 'species') this.species}): _evolutionDetails = evolutionDetails,_evolvesTo = evolvesTo;
+  const _EvolutionEntity({@JsonKey(name: 'evolution_details') final  List<EvolutionDetailEntity>? evolutionDetails, @JsonKey(name: 'evolves_to') final  List<EvolutionEntity>? evolvesTo, @JsonKey(name: 'is_baby') this.isBaby, @JsonKey(name: 'species') this.species, @JsonKey(name: 'pokemon') this.detailPokemon}): _evolutionDetails = evolutionDetails,_evolvesTo = evolvesTo;
   factory _EvolutionEntity.fromJson(Map<String, dynamic> json) => _$EvolutionEntityFromJson(json);
 
  final  List<EvolutionDetailEntity>? _evolutionDetails;
@@ -247,6 +260,7 @@ class _EvolutionEntity implements EvolutionEntity {
 
 @override@JsonKey(name: 'is_baby') final  bool? isBaby;
 @override@JsonKey(name: 'species') final  SpeciesEntity? species;
+@override@JsonKey(name: 'pokemon') final  PokemonEntity? detailPokemon;
 
 /// Create a copy of EvolutionEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -261,16 +275,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EvolutionEntity&&const DeepCollectionEquality().equals(other._evolutionDetails, _evolutionDetails)&&const DeepCollectionEquality().equals(other._evolvesTo, _evolvesTo)&&(identical(other.isBaby, isBaby) || other.isBaby == isBaby)&&(identical(other.species, species) || other.species == species));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EvolutionEntity&&const DeepCollectionEquality().equals(other._evolutionDetails, _evolutionDetails)&&const DeepCollectionEquality().equals(other._evolvesTo, _evolvesTo)&&(identical(other.isBaby, isBaby) || other.isBaby == isBaby)&&(identical(other.species, species) || other.species == species)&&(identical(other.detailPokemon, detailPokemon) || other.detailPokemon == detailPokemon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_evolutionDetails),const DeepCollectionEquality().hash(_evolvesTo),isBaby,species);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_evolutionDetails),const DeepCollectionEquality().hash(_evolvesTo),isBaby,species,detailPokemon);
 
 @override
 String toString() {
-  return 'EvolutionEntity(evolutionDetails: $evolutionDetails, evolvesTo: $evolvesTo, isBaby: $isBaby, species: $species)';
+  return 'EvolutionEntity(evolutionDetails: $evolutionDetails, evolvesTo: $evolvesTo, isBaby: $isBaby, species: $species, detailPokemon: $detailPokemon)';
 }
 
 
@@ -281,11 +295,11 @@ abstract mixin class _$EvolutionEntityCopyWith<$Res> implements $EvolutionEntity
   factory _$EvolutionEntityCopyWith(_EvolutionEntity value, $Res Function(_EvolutionEntity) _then) = __$EvolutionEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'evolution_details') List<EvolutionDetailEntity>? evolutionDetails,@JsonKey(name: 'evolves_to') List<EvolutionEntity>? evolvesTo,@JsonKey(name: 'is_baby') bool? isBaby,@JsonKey(name: 'species') SpeciesEntity? species
+@JsonKey(name: 'evolution_details') List<EvolutionDetailEntity>? evolutionDetails,@JsonKey(name: 'evolves_to') List<EvolutionEntity>? evolvesTo,@JsonKey(name: 'is_baby') bool? isBaby,@JsonKey(name: 'species') SpeciesEntity? species,@JsonKey(name: 'pokemon') PokemonEntity? detailPokemon
 });
 
 
-@override $SpeciesEntityCopyWith<$Res>? get species;
+@override $SpeciesEntityCopyWith<$Res>? get species;@override $PokemonEntityCopyWith<$Res>? get detailPokemon;
 
 }
 /// @nodoc
@@ -298,13 +312,14 @@ class __$EvolutionEntityCopyWithImpl<$Res>
 
 /// Create a copy of EvolutionEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? evolutionDetails = freezed,Object? evolvesTo = freezed,Object? isBaby = freezed,Object? species = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? evolutionDetails = freezed,Object? evolvesTo = freezed,Object? isBaby = freezed,Object? species = freezed,Object? detailPokemon = freezed,}) {
   return _then(_EvolutionEntity(
 evolutionDetails: freezed == evolutionDetails ? _self._evolutionDetails : evolutionDetails // ignore: cast_nullable_to_non_nullable
 as List<EvolutionDetailEntity>?,evolvesTo: freezed == evolvesTo ? _self._evolvesTo : evolvesTo // ignore: cast_nullable_to_non_nullable
 as List<EvolutionEntity>?,isBaby: freezed == isBaby ? _self.isBaby : isBaby // ignore: cast_nullable_to_non_nullable
 as bool?,species: freezed == species ? _self.species : species // ignore: cast_nullable_to_non_nullable
-as SpeciesEntity?,
+as SpeciesEntity?,detailPokemon: freezed == detailPokemon ? _self.detailPokemon : detailPokemon // ignore: cast_nullable_to_non_nullable
+as PokemonEntity?,
   ));
 }
 
@@ -319,6 +334,18 @@ $SpeciesEntityCopyWith<$Res>? get species {
 
   return $SpeciesEntityCopyWith<$Res>(_self.species!, (value) {
     return _then(_self.copyWith(species: value));
+  });
+}/// Create a copy of EvolutionEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PokemonEntityCopyWith<$Res>? get detailPokemon {
+    if (_self.detailPokemon == null) {
+    return null;
+  }
+
+  return $PokemonEntityCopyWith<$Res>(_self.detailPokemon!, (value) {
+    return _then(_self.copyWith(detailPokemon: value));
   });
 }
 }

@@ -106,7 +106,7 @@ class GetPokemonBloc extends SafeCubit<GetPokemonState> {
               pokemons: detailedPokemons,
               offset: newOffset,
               limit: limit,
-              hasReachedMax: detailedPokemons.length < newOffset + limit,
+              hasReachedMax: detailedPokemons.isEmpty,
               onLoadMore: false,
             ));
           },

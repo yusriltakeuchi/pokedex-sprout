@@ -6,30 +6,28 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageCaching extends StatelessWidget {
   final String imageUrl;
-  const ImageCaching({super.key, required this.imageUrl,});
+  final BoxFit? fit;
+
+  const ImageCaching({
+    super.key,
+    required this.imageUrl,
+    this.fit,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: MyTheme.color.white,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
+      fit: fit ?? BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
       placeholder: (context, url) => const LoadingSingleBox(
         height: double.infinity,
       ),
       errorWidget: (context, url, error) => Assets.images.logoFull.image(
         width: double.infinity,
         height: double.infinity,
+        fit: BoxFit.contain,
       ),
     );
   }
@@ -41,5 +39,3 @@ CachedNetworkImageProvider baseImageDecorationComponent({
   CachedNetworkImageProvider(
     url.isNotEmpty ? url : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxeAS3OYy1yQBs03eiKx1FBjuEVW-Hcy28AVvbyAOzSmrV5-kHMBQakzM8hKMsc7NN0Qo&usqp=CAU",
   );
-
-

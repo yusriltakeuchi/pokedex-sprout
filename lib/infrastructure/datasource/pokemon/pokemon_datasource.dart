@@ -15,7 +15,4 @@ class PokemonDataSource {
 
   Future<Either<Failure, PokemonEntity>> getPokemon(String name) async
     => apiClient.pokemon.get(Endpoint.getPokemon.replaceAll("{name}", name));
-
-  Future<Either<Failure, SpeciesEntity>> getSpecies(String id) async
-    => apiClient.species.get(Endpoint.getSpecies.replaceAll("{id}", id));
 }

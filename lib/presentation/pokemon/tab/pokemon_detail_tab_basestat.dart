@@ -37,33 +37,54 @@ class PokemonDetailTabBaseStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: .zero,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: stats.length,
-      itemBuilder: (context, index) {
-        final stat = stats[index];
-        return Padding(
-          padding: EdgeInsets.only(bottom: AppSetting.setHeight(20)),
-          child: _LabelStats(
-            title: normalizeStat(
-              stat.stat?.name?.capitalizeMultipleWords() ?? "-",
-            ),
-            value: stat.baseStat?.toString() ?? '-',
-            suffix: Padding(
-              padding: EdgeInsets.only(left: AppSetting.setWidth(40)),
-              child: _ProgressStat(
-                value: stat.baseStat?.toDouble() ?? 0,
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        ListView.builder(
+          shrinkWrap: true,
+          padding: .zero,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: stats.length,
+          itemBuilder: (context, index) {
+            final stat = stats[index];
+            return Padding(
+              padding: EdgeInsets.only(bottom: AppSetting.setHeight(20)),
+              child: _LabelStats(
+                title: normalizeStat(
+                  stat.stat?.name?.capitalizeMultipleWords() ?? "-",
+                ),
+                value: stat.baseStat?.toString() ?? '-',
+                suffix: Padding(
+                  padding: EdgeInsets.only(left: AppSetting.setWidth(40)),
+                  child: _ProgressStat(
+                    value: stat.baseStat?.toDouble() ?? 0,
 
-                /// As per pokemon games, the maximum base stat value is 255
-                maxValue: 255,
-                color: colorByStat(stat.stat?.name ?? ""),
+                    /// As per pokemon games, the maximum base stat value is 255
+                    maxValue: 255,
+                    color: colorByStat(stat.stat?.name ?? ""),
+                  ),
+                ),
               ),
-            ),
+            );
+          },
+        ),
+        Space.h(70),
+        Text(
+          "Type Defenses",
+          style: MyTheme.style.title.copyWith(
+            color: MyTheme.color.blackWhite,
+            fontSize: AppSetting.setFontSize(50),
           ),
-        );
-      },
+        ),
+        Space.h(30),
+        Text(
+          "Type defenses information will be available soon.",
+          style: MyTheme.style.subtitle.copyWith(
+            color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
+            fontSize: AppSetting.setFontSize(40),
+          ),
+        )
+      ],
     );
   }
 }

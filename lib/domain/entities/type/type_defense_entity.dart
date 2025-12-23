@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'type_defense_entity.freezed.dart';
@@ -13,5 +15,4 @@ abstract class TypeDefenseEntity with _$TypeDefenseEntity {
 
   factory TypeDefenseEntity.fromJson(Map<String, dynamic> json) =>
       _$TypeDefenseEntityFromJson(json);
-
 }

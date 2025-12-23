@@ -101,7 +101,7 @@ class _PokemonDetailTabAboutState extends State<PokemonDetailTabAbout> {
                     .join(", ")
               : "-",
         ),
-        Space.h(70),
+        Space.h(30),
         Text(
           "Breeding",
           style: MyTheme.style.title.copyWith(

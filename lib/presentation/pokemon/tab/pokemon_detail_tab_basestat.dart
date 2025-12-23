@@ -7,6 +7,8 @@ import 'package:pokedex/domain/entities/stat/stat_entity.dart';
 import 'package:pokedex/domain/entities/type/type_defense_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/theme/theme.dart';
+import 'package:pokedex/utils/color/color_utils.dart';
+import 'package:pokedex/utils/icon/icon_utils.dart';
 
 class PokemonDetailTabBaseStat extends StatelessWidget {
   final List<StatEntity> stats;
@@ -72,7 +74,7 @@ class PokemonDetailTabBaseStat extends StatelessWidget {
             );
           },
         ),
-        Space.h(70),
+        Space.h(30),
         Text(
           "Type Defenses",
           style: MyTheme.style.title.copyWith(
@@ -82,12 +84,13 @@ class PokemonDetailTabBaseStat extends StatelessWidget {
         ),
         Space.h(30),
         Text(
-          "Type defenses information will be available soon.",
+          "The effectiveness of each type on this Pokémon.",
           style: MyTheme.style.subtitle.copyWith(
             color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
             fontSize: AppSetting.setFontSize(40),
           ),
         ),
+        Space.h(30),
         BlocBuilder<GetTypeDefensesBloc, GetTypeDefensesState>(
           builder: (context, state) {
             return state.maybeWhen(
@@ -120,6 +123,7 @@ class PokemonDetailTabBaseStat extends StatelessWidget {
             );
           },
         ),
+        Space.h(100),
       ],
     );
   }
@@ -136,35 +140,77 @@ class _DefensesCard extends StatelessWidget {
     required this.types,
   });
 
+  String normalizeMultiplier() {
+    /// Get min multiplier to max multiplier string
+    /// if the two value is 0, then return "0"
+    if (types.isEmpty) return "-";
+    /// Get min and ma value from types
+    final minMultiplier = types.map((e) => e.multiplier ?? 1.0).reduce((a, b) => a < b ? a : b);
+    final maxMultiplier = types.map((e) => e.multiplier ?? 1.0).reduce((a, b) => a > b ? a : b);
+
+    /// Format number to remove .0 if decimal is 0
+    String formatMultiplier(double value) {
+      return value % 1 == 0 ? value.toInt().toString() : value.toString();
+    }
+
+    if (minMultiplier == maxMultiplier) {
+      return "${formatMultiplier(minMultiplier)}x damage";
+    } else {
+      return "${formatMultiplier(minMultiplier)}x to ${formatMultiplier(maxMultiplier)}x damage";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      margin: .symmetric(horizontal: AppSetting.setWidth(10)),
       decoration: BoxDecoration(
         borderRadius: .circular(10),
         color: MyTheme.color.white,
+        boxShadow: AppSetting.softShadow,
       ),
       child: Column(
         crossAxisAlignment: .start,
         children: [
           Container(
-            color: color,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.only(
+                topLeft: .circular(10),
+                topRight: .circular(10),
+              ),
+            ),
             child: Padding(
               padding: .symmetric(
                 vertical: AppSetting.setHeight(20),
                 horizontal: AppSetting.setWidth(30),
               ),
-              child: Text(
-                title,
-                style: MyTheme.style.title.copyWith(
-                  color: MyTheme.color.white,
-                  fontSize: AppSetting.setFontSize(40),
-                ),
+              child: Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: MyTheme.style.title.copyWith(
+                      color: MyTheme.color.white,
+                      fontSize: AppSetting.setFontSize(40),
+                    ),
+                  ),
+                  Text(
+                    normalizeMultiplier(),
+                    style: MyTheme.style.subtitle.copyWith(
+                      color: MyTheme.color.white,
+                      fontSize: AppSetting.setFontSize(35),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           Padding(
             padding: .symmetric(
-              vertical: AppSetting.setHeight(20),
+              vertical: AppSetting.setHeight(30),
               horizontal: AppSetting.setWidth(30),
             ),
             child: Wrap(
@@ -172,22 +218,34 @@ class _DefensesCard extends StatelessWidget {
                   .map(
                     (e) => Container(
                       margin: EdgeInsets.only(
-                        right: AppSetting.setWidth(10),
-                        bottom: AppSetting.setHeight(10),
+                        right: AppSetting.setWidth(20),
+                        bottom: AppSetting.setHeight(20),
                       ),
                       padding: EdgeInsets.symmetric(
                         vertical: AppSetting.setHeight(10),
-                        horizontal: AppSetting.setWidth(15),
+                        horizontal: AppSetting.setWidth(40),
                       ),
                       decoration: BoxDecoration(
-                        color: MyTheme.color.primary.withValues(alpha: 0.1),
+                        color: (ColorUtils.instance.mapTypeColor(e.name ?? "")),
                         borderRadius: .circular(30),
                       ),
-                      child: Text(
-                        e.name?.capitalizeMultipleWords() ?? "-",
-                        style: MyTheme.style.subtitle.copyWith(
-                          color: MyTheme.color.primary,
-                          fontSize: AppSetting.setFontSize(35),
+                      child: FittedBox(
+                        child: Row(
+                          children: [
+                            Icon(
+                              IconUtils.instance.mapIconType(e.name ?? ""),
+                              color: MyTheme.color.white,
+                              size: AppSetting.setWidth(40),
+                            ),
+                            Space.w(10),
+                            Text(
+                              e.name?.capitalizeMultipleWords() ?? "-",
+                              style: MyTheme.style.subtitle.copyWith(
+                                color: MyTheme.color.white,
+                                fontSize: AppSetting.setFontSize(35),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

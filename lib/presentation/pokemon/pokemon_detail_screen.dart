@@ -76,26 +76,35 @@ class _ContentSection extends StatefulWidget {
 class _ContentSectionState extends State<_ContentSection> {
   List<String> tabs = ["About", "Base Stats", "Evolution", "Moves"];
   int selectedTabIndex = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: selectedTabIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void onTabSelected(int index) {
     setState(() {
       selectedTabIndex = index;
     });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
-  Widget mapContentTab() {
-    switch (selectedTabIndex) {
-      case 0:
-        return PokemonDetailTabAbout(pokemon: widget.pokemon);
-      case 1:
-        return PokemonDetailTabBaseStat(stats: widget.pokemon.stats ?? [],);
-      case 2:
-        return PokemonDetailTabBaseEvolution();
-      case 3:
-        return PokemonDetailTabBaseMoves();
-      default:
-        return const SizedBox();
-    }
+  void onPageChanged(int index) {
+    setState(() {
+      selectedTabIndex = index;
+    });
   }
 
   @override
@@ -167,13 +176,37 @@ class _ContentSectionState extends State<_ContentSection> {
                         ),
                       ),
 
-                      /// Content tab
+                      /// Content tab - now swipeable with PageView
                       Expanded(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: .only(top: AppSetting.setHeight(30)),
-                            child: mapContentTab(),
-                          ),
+                        child: PageView(
+                          controller: _pageController,
+                          onPageChanged: onPageChanged,
+                          children: [
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: .only(top: AppSetting.setHeight(30)),
+                                child: PokemonDetailTabAbout(pokemon: widget.pokemon),
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: .only(top: AppSetting.setHeight(30)),
+                                child: PokemonDetailTabBaseStat(stats: widget.pokemon.stats ?? [],),
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: .only(top: AppSetting.setHeight(30)),
+                                child: PokemonDetailTabBaseEvolution(),
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: .only(top: AppSetting.setHeight(30)),
+                                child: PokemonDetailTabBaseMoves(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

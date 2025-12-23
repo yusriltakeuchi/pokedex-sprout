@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
+import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
@@ -15,23 +17,13 @@ import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_basestat.dar
 import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_evolution.dart';
 import 'package:pokedex/presentation/pokemon/tab/pokemon_detail_tab_moves.dart';
 import 'package:pokedex/theme/theme.dart';
+import 'package:pokedex/utils/helper/helper_utils.dart';
 
 @RoutePage()
 class PokemonDetailScreen extends StatelessWidget {
   final PokemonEntity pokemon;
 
   const PokemonDetailScreen({super.key, required this.pokemon});
-
-  String parseId() {
-    /// there is value like this url "https://pokeapi.co/api/v2/pokemon-species/4/"
-    /// i want to get the id "4" from this url
-    final url = pokemon.species?.url ?? "";
-    final segments = url.split('/');
-    if (segments.length >= 2) {
-      return segments[segments.length - 2];
-    }
-    return "0";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +33,17 @@ class PokemonDetailScreen extends StatelessWidget {
       body: MultiBlocProvider(
         providers: [
           BlocProvider<GetSpeciesBloc>(
-            create: (context) => GetSpeciesBloc()..getSpecies(parseId()),
+            create: (context) => GetSpeciesBloc()
+              ..getSpecies(
+                HelperUtils.instance.parseUrlId(pokemon.species?.url ?? ""),
+              ),
           ),
           BlocProvider<GetTypeDefensesBloc>(
             create: (context) => GetTypeDefensesBloc()
               ..getTypeDefenses(pokemon.types!.map((e) => e.type!).toList()),
+          ),
+          BlocProvider<EvolutionChainBloc>(
+            create: (context) => EvolutionChainBloc(),
           ),
         ],
         child: PokemonDetailBody(pokemon: pokemon),
@@ -232,7 +230,9 @@ class _ContentSectionState extends State<_ContentSection> {
                   child: Hero(
                     tag: 'pokemon_image_${widget.pokemon.id}',
                     child: ImageCaching(
-                      imageUrl: widget.pokemon.sprites?.other?.home?.frontDefault ?? "",
+                      imageUrl:
+                          widget.pokemon.sprites?.other?.home?.frontDefault ??
+                          "",
                       width: AppSetting.setWidth(700),
                       height: imageHeight,
                       fit: BoxFit.contain,

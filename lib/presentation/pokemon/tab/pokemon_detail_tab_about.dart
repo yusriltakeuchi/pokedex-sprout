@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/core/components/loading/loading_listview.dart';
@@ -8,6 +9,7 @@ import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/gen/assets.gen.dart';
 import 'package:pokedex/theme/theme.dart';
+import 'package:pokedex/utils/helper/helper_utils.dart';
 
 class PokemonDetailTabAbout extends StatefulWidget {
   final PokemonEntity pokemon;
@@ -79,12 +81,14 @@ class _PokemonDetailTabAboutState extends State<PokemonDetailTabAbout> {
         Space.h(30),
         _LabelHorizontal(
           title: "Height",
-          value: "${heightToFeetInches(widget.pokemon.height ?? 0)} (${(widget.pokemon.height ?? 0) / 10} m)",
+          value:
+              "${heightToFeetInches(widget.pokemon.height ?? 0)} (${(widget.pokemon.height ?? 0) / 10} m)",
         ),
         Space.h(30),
         _LabelHorizontal(
           title: "Weight",
-          value: "${weightToLbs(widget.pokemon.weight ?? 0).toStringAsFixed(1)} lbs (${(widget.pokemon.weight ?? 0) / 10} kg)",
+          value:
+              "${weightToLbs(widget.pokemon.weight ?? 0).toStringAsFixed(1)} lbs (${(widget.pokemon.weight ?? 0) / 10} kg)",
         ),
         Space.h(30),
         _LabelHorizontal(
@@ -110,14 +114,24 @@ class _PokemonDetailTabAboutState extends State<PokemonDetailTabAbout> {
           ),
         ),
         Space.h(30),
-        BlocBuilder<GetSpeciesBloc, GetSpeciesState>(
+        BlocConsumer<GetSpeciesBloc, GetSpeciesState>(
+          listener: (contet, state) {
+            state.maybeWhen(
+              orElse: () {},
+              loaded: (species) {
+                final evolutionId = HelperUtils.instance.parseUrlId(
+                  species.evolutionChain?.url ?? "",
+                );
+                context.read<EvolutionChainBloc>().getEvolutionChain(
+                  evolutionId,
+                  );
+              },
+            );
+          },
           builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const SizedBox(),
-              loading: () => LoadingListView(
-                height: 50,
-                length: 3,
-              ),
+              loading: () => LoadingListView(height: 50, length: 3),
               loaded: (species) {
                 final GenderRatioEntity genderRatio = calculateGenderRatio(
                   species.genderRate!,
@@ -193,7 +207,8 @@ class _PokemonDetailTabAboutState extends State<PokemonDetailTabAbout> {
                     Space.h(30),
                     _LabelHorizontal(
                       title: "Egg Cycle",
-                      value: "${species.hatchCounter} (${calculateEggSteps(species.hatchCounter!)} steps)",
+                      value:
+                          "${species.hatchCounter} (${calculateEggSteps(species.hatchCounter!)} steps)",
                     ),
                   ],
                 );

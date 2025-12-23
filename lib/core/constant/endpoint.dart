@@ -10,4 +10,6 @@ class Endpoint {
   static const getSpecies = "/pokemon-species/{id}";
   /// TYPE ENDPOINT
   static const getType = "/type/{id}";
+  /// EVOLUTION CHAIN ENDPOINT
+  static const getEvolutionChain = "/evolution-chain/{id}";
 }

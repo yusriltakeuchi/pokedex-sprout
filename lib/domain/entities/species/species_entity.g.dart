@@ -16,6 +16,11 @@ _SpeciesEntity _$SpeciesEntityFromJson(Map<String, dynamic> json) =>
           ?.map((e) => EggGroupEntity.fromJson(e as Map<String, dynamic>))
           .toList(),
       hatchCounter: (json['hatch_counter'] as num?)?.toInt(),
+      evolutionChain: json['evolution_chain'] == null
+          ? null
+          : EvolutionChainEntity.fromJson(
+              json['evolution_chain'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$SpeciesEntityToJson(_SpeciesEntity instance) =>
@@ -26,4 +31,5 @@ Map<String, dynamic> _$SpeciesEntityToJson(_SpeciesEntity instance) =>
       'gender_rate': instance.genderRate,
       'egg_groups': instance.eggGroups,
       'hatch_counter': instance.hatchCounter,
+      'evolution_chain': instance.evolutionChain,
     };

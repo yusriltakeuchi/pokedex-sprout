@@ -6,6 +6,7 @@ import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/core/components/button/icon_click_button.dart';
 import 'package:pokedex/core/components/click/click_item.dart';
+import 'package:pokedex/core/components/image/image_cache.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/gen/assets.gen.dart';
@@ -230,18 +231,11 @@ class _ContentSectionState extends State<_ContentSection> {
                   padding: .symmetric(horizontal: AppSetting.setWidth(50)),
                   child: Hero(
                     tag: 'pokemon_image_${widget.pokemon.id}',
-                    child: Image.network(
-                      widget.pokemon.sprites?.other?.home?.frontDefault ?? "",
+                    child: ImageCaching(
+                      imageUrl: widget.pokemon.sprites?.other?.home?.frontDefault ?? "",
                       width: AppSetting.setWidth(700),
                       height: imageHeight,
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Assets.images.logoFullWhite.image(
-                          width: AppSetting.setWidth(300),
-                          height: AppSetting.setHeight(300),
-                          fit: BoxFit.contain,
-                        );
-                      },
                     ),
                   ),
                 ),

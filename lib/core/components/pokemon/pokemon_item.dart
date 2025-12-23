@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/core/components/click/click_item.dart';
+import 'package:pokedex/core/components/image/image_cache.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/gen/assets.gen.dart';
@@ -79,10 +80,11 @@ class PokemonItem extends StatelessWidget {
               child: pokemon.sprites?.other?.home?.frontDefault != null
                   ? Hero(
                       tag: "pokemon_image_${pokemon.id}",
-                      child: Image.network(
-                        pokemon.sprites?.other?.home?.frontDefault ?? "",
+                      child: ImageCaching(
+                        imageUrl: pokemon.sprites?.other?.home?.frontDefault ?? "",
                         width: AppSetting.setWidth(260),
                         height: AppSetting.setHeight(260),
+                        fit: BoxFit.contain,
                       ),
                     )
                   : SizedBox(

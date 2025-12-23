@@ -7,10 +7,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 class ImageCaching extends StatelessWidget {
   final String imageUrl;
   final BoxFit? fit;
+  final double width;
+  final double height;
 
   const ImageCaching({
     super.key,
     required this.imageUrl,
+    required this.width,
+    required this.height,
     this.fit,
   });
 
@@ -19,14 +23,14 @@ class ImageCaching extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       fit: fit ?? BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-      placeholder: (context, url) => const LoadingSingleBox(
-        height: double.infinity,
+      width: width,
+      height: height,
+      placeholder: (context, url) => LoadingSingleBox(
+        height: height,
       ),
       errorWidget: (context, url, error) => Assets.images.logoFull.image(
-        width: double.infinity,
-        height: double.infinity,
+        width: width,
+        height: height,
         fit: BoxFit.contain,
       ),
     );

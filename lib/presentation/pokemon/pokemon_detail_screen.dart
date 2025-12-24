@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
+import 'package:pokedex/bloc/pokemon/get_pokemon_moves_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
@@ -43,6 +44,9 @@ class PokemonDetailScreen extends StatelessWidget {
           ),
           BlocProvider<EvolutionChainBloc>(
             create: (context) => EvolutionChainBloc(),
+          ),
+          BlocProvider<GetPokemonMovesBloc>(
+            create: (context) => GetPokemonMovesBloc(),
           ),
         ],
         child: BlocListener<GetSpeciesBloc, GetSpeciesState>(

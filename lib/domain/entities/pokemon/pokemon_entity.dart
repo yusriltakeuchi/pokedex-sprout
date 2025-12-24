@@ -26,7 +26,7 @@ abstract class PokemonEntity with _$PokemonEntity {
     @JsonKey(name: 'stats') List<StatEntity>? stats,
     @JsonKey(name: 'sprites') SpriteEntity? sprites,
     @JsonKey(name: 'species') SpeciesEntity? species,
-    @JsonKey(name: 'moves') MoveEntity? moves,
+    @JsonKey(name: 'moves') List<MoveEntity>? moves,
   }) = _PokemonEntity;
 
   factory PokemonEntity.fromJson(Map<String, dynamic> json) =>

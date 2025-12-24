@@ -227,7 +227,9 @@ class _ContentSectionState extends State<_ContentSection> {
                             SingleChildScrollView(
                               child: Padding(
                                 padding: .only(top: AppSetting.setHeight(30)),
-                                child: PokemonDetailTabBaseMoves(),
+                                child: PokemonDetailTabBaseMoves(
+                                  move: widget.pokemon.moves,
+                                ),
                               ),
                             ),
                           ],

@@ -32,9 +32,9 @@ _PokemonEntity _$PokemonEntityFromJson(Map<String, dynamic> json) =>
       species: json['species'] == null
           ? null
           : SpeciesEntity.fromJson(json['species'] as Map<String, dynamic>),
-      moves: json['moves'] == null
-          ? null
-          : MoveEntity.fromJson(json['moves'] as Map<String, dynamic>),
+      moves: (json['moves'] as List<dynamic>?)
+          ?.map((e) => MoveEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PokemonEntityToJson(_PokemonEntity instance) =>

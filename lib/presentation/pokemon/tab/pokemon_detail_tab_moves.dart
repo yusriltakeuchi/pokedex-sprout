@@ -7,8 +7,11 @@ import 'package:pokedex/core/components/expandable/expandable_item.dart';
 import 'package:pokedex/core/components/loading/loading_listview.dart';
 import 'package:pokedex/domain/entities/moves/move_detail_entity.dart';
 import 'package:pokedex/domain/entities/moves/move_entity.dart';
+import 'package:pokedex/extension/string_extension.dart';
 import 'package:pokedex/theme/theme.dart';
+import 'package:pokedex/utils/color/color_utils.dart';
 import 'package:pokedex/utils/helper/helper_utils.dart';
+import 'package:pokedex/utils/icon/icon_utils.dart';
 
 class PokemonDetailTabBaseMoves extends StatefulWidget {
   final List<MoveEntity>? move;
@@ -25,21 +28,33 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
 
   void onChangeIndex(int index) {
     setState(() {
-      selectedIndex = index;
+      selectedIndex = index == selectedIndex ? -1 : index;
     });
   }
 
-  List<MoveEntity> getMovesByName(String name) =>
-      widget.move
-          ?.where(
-            (move) =>
-                move.versionGroupDetails?.any(
-                  (detail) => detail.moveLearnMethod?.name == name,
-                ) ??
-                false,
-          )
-          .toList() ??
-      [];
+  List<MoveEntity> getMovesByName(String name) {
+    final filteredMoves = widget.move
+            ?.where(
+              (move) =>
+                  move.versionGroupDetails?.any(
+                    (detail) => detail.moveLearnMethod?.name == name,
+                  ) ??
+                  false,
+            )
+            .toList() ??
+        [];
+    
+    // Sort by level for "level-up" moves
+    if (name == "level-up") {
+      filteredMoves.sort((a, b) {
+        final levelA = a.versionGroupDetails?.first.levelLearnedAt ?? 0;
+        final levelB = b.versionGroupDetails?.first.levelLearnedAt ?? 0;
+        return levelA.compareTo(levelB);
+      });
+    }
+    
+    return filteredMoves;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,15 +156,15 @@ class _MoveSectionsState extends State<_MoveSections> {
 
   String _mapColumnHeaderStandard(int index) {
     switch (index) {
-      case 1:
+      case 0:
         return 'Move';
-      case 2:
+      case 1:
         return 'Type';
-      case 3:
+      case 2:
         return 'Cat.';
-      case 4:
+      case 3:
         return 'Power';
-      case 5:
+      case 4:
         return 'Acc.';
       default:
         return '';
@@ -185,15 +200,15 @@ class _MoveSectionsState extends State<_MoveSections> {
             ? move.versionGroupDetails!.first.levelLearnedAt.toString()
             : "-";
       case 1:
-        return move.move?.name ?? "";
+        return move.move?.name?.replaceAll("-", " ").capitalizeMultipleWords() ?? "";
       case 2:
         return moveDetail.type?.name ?? "";
       case 3:
-        return moveDetail.damageClass?.name ?? "";
+        return moveDetail.damageClass?.name?.capitalizeMultipleWords() ?? "";
       case 4:
-        return moveDetail.power.toString();
+        return moveDetail.power?.toString() ?? "-";
       case 5:
-        return moveDetail.accuracy.toString();
+        return moveDetail.accuracy?.toString() ?? "-";
       default:
         return "";
     }
@@ -208,15 +223,15 @@ class _MoveSectionsState extends State<_MoveSections> {
       case 0:
         return "TM";
       case 1:
-        return move.move?.name ?? "";
+        return move.move?.name?.replaceAll("-", " ").capitalizeMultipleWords() ?? "";
       case 2:
         return moveDetail.type?.name ?? "";
       case 3:
-        return moveDetail.damageClass?.name ?? "";
+        return moveDetail.damageClass?.name?.capitalizeMultipleWords() ?? "";
       case 4:
-        return moveDetail.power.toString();
+        return moveDetail.power?.toString() ?? "-";
       case 5:
-        return moveDetail.accuracy.toString();
+        return moveDetail.accuracy?.toString() ?? "-";
       default:
         return "";
     }
@@ -228,16 +243,16 @@ class _MoveSectionsState extends State<_MoveSections> {
     int column,
   ) {
     switch (column) {
+      case 0:
+        return move.move?.name?.replaceAll("-", " ").capitalizeMultipleWords() ?? "";
       case 1:
-        return move.move?.name ?? "";
-      case 2:
         return moveDetail.type?.name ?? "";
+      case 2:
+        return moveDetail.damageClass?.name?.capitalizeMultipleWords() ?? "";
       case 3:
-        return moveDetail.damageClass?.name ?? "";
+        return moveDetail.power?.toString() ?? "-";
       case 4:
-        return moveDetail.power.toString();
-      case 5:
-        return moveDetail.accuracy.toString();
+        return moveDetail.accuracy?.toString() ?? "-";
       default:
         return "";
     }
@@ -271,6 +286,54 @@ class _MoveSectionsState extends State<_MoveSections> {
     context.read<GetPokemonMovesBloc>().getPokemonMoves(moveIds);
   }
 
+  List<TableColumn> getTableColumn() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final padding = AppSetting.setWidth(40);
+    final tableWidth = screenWidth - (padding * 2);
+    final columnWidth = tableWidth / 5;
+
+    if (widget.type == "level-up" || widget.type == "machine") {
+      return [
+        TableColumn(
+          width: columnWidth,
+        ),
+        TableColumn(
+          width: columnWidth + 80,
+        ),
+        TableColumn(
+          width: columnWidth,
+        ),
+        TableColumn(
+          width: columnWidth + 20,
+        ),
+        TableColumn(
+          width: columnWidth,
+        ),
+        TableColumn(
+          width: columnWidth,
+        ),
+      ];
+    } else {
+      return [
+        TableColumn(
+          width: columnWidth + 80,
+        ),
+        TableColumn(
+          width: columnWidth,
+        ),
+        TableColumn(
+          width: columnWidth + 20,
+        ),
+        TableColumn(
+          width: columnWidth,
+        ),
+        TableColumn(
+          width: columnWidth,
+        ),
+      ];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -290,33 +353,7 @@ class _MoveSectionsState extends State<_MoveSections> {
             return TableView.builder(
               physics: const BouncingScrollPhysics(),
               shrinkWrapVertical: true,
-              columns: [
-                TableColumn(
-                  width: AppSetting.setWidth(210),
-                  freezePriority: 100,
-                ),
-                TableColumn(
-                  width: AppSetting.setWidth(340),
-                  freezePriority: 90,
-                ),
-                TableColumn(
-                  width: AppSetting.setWidth(330),
-                  freezePriority: 80,
-                ),
-                TableColumn(
-                  width: AppSetting.setWidth(300),
-                  freezePriority: 70,
-                ),
-                TableColumn(
-                  width: AppSetting.setWidth(320),
-                  freezePriority: 60,
-                ),
-                TableColumn(
-                  width: AppSetting.setWidth(320),
-                  freezePriority: 60,
-                ),
-              ],
-
+              columns: getTableColumn(),
               rowCount: widget.moves.length + 1,
 
               /// +1 untuk header
@@ -327,12 +364,12 @@ class _MoveSectionsState extends State<_MoveSections> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: row == 0
-                          ? MyTheme.color.primary.withValues(alpha: 0.2)
+                          ? MyTheme.color.primary
                           : MyTheme.color.containerColor,
                       border: Border(
                         bottom: BorderSide(
                           color: AppSetting.isDark
-                              ? MyTheme.color.blackWhite.withValues(alpha: 0.1)
+                              ? MyTheme.color.white.withValues(alpha: 0.1)
                               : Colors.grey[200]!,
                           width: 1,
                         ),
@@ -350,7 +387,7 @@ class _MoveSectionsState extends State<_MoveSections> {
                           child: Text(
                             mapColumnHeader(column),
                             style: MyTheme.style.title.copyWith(
-                              color: MyTheme.color.blackWhite,
+                              color: MyTheme.color.white,
                               fontSize: AppSetting.setFontSize(35),
                               fontWeight: FontWeight.bold,
                             ),
@@ -360,27 +397,53 @@ class _MoveSectionsState extends State<_MoveSections> {
                       /// Data rows
                       else {
                         final dataIndex = row - 1;
+                        
                         if (dataIndex < widget.moves.length) {
                           final move = widget.moves[dataIndex];
-                          final moveDetail = moves[dataIndex];
-
-                          if (column == 2) {
+                          
+                          // Find the corresponding move detail by matching move name/url
+                          final moveId = HelperUtils.instance.parseUrlId(move.move?.url ?? "");
+                          final moveDetail = moves.firstWhere(
+                            (detail) => detail.id.toString() == moveId,
+                            orElse: () {
+                              return MoveDetailEntity();
+                            },
+                          );
+                          String text = mapValueText(
+                            move,
+                            moveDetail,
+                            column,
+                          );
+                          if (column == (widget.type == "level-up" || widget.type == "machine" ? 2 : 1)) {
                             /// IMAGE TYPE column
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSetting.setWidth(40),
-                                vertical: AppSetting.setHeight(20),
+                            return FittedBox(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ColorUtils.instance.mapTypeColor(text),
+                                ),
+                                margin: .symmetric(
+                                  horizontal: AppSetting.setWidth(10),
+                                  vertical: AppSetting.setHeight(10),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Center(
+                                  child: Padding(
+                                    padding: .symmetric(
+                                      horizontal: AppSetting.setWidth(30),
+                                      vertical: AppSetting.setHeight(30),
+                                    ),
+                                    child: Image.asset(
+                                      IconUtils.instance.mapIconType(text),
+                                      width: AppSetting.setWidth(60),
+                                      height: AppSetting.setHeight(60),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              alignment: Alignment.centerLeft,
-                              color: MyTheme.color.greyDark,
                             );
                           } else {
                             /// OTHER COLUMNS
-                            String text = mapValueText(
-                              move,
-                              moveDetail,
-                              column,
-                            );
                             return Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppSetting.setWidth(40),

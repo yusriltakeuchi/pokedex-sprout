@@ -56,7 +56,7 @@ class ColorUtils {
       case 'shadow':
         return const Color(0xFF4A4A4A);
       default:
-        return const Color(0xFF68A090);
+        return const Color(0xFF2C2C2C);
     }
   }
 }

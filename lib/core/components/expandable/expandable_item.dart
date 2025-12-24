@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/click/click_item.dart';
 import 'package:pokedex/theme/theme.dart';
 
 /// Expandable with animation
@@ -18,38 +19,47 @@ class ExpandableItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        Row(
-          mainAxisAlignment: .spaceBetween,
+    return Clickable(
+      onClick: () => onClick(),
+      borderRadius: .circular(8),
+      child: Padding(
+        padding: .symmetric(
+          horizontal: AppSetting.setWidth(30),
+        ),
+        child: Column(
+          crossAxisAlignment: .start,
           children: [
-            Text(
-              title,
-              style: MyTheme.style.title.copyWith(
-                fontSize: AppSetting.setFontSize(35),
-                color: MyTheme.color.black,
-              ),
+            Row(
+              mainAxisAlignment: .spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: MyTheme.style.title.copyWith(
+                    fontSize: AppSetting.setFontSize(35),
+                    color: MyTheme.color.black,
+                  ),
+                ),
+                IconButton(
+                  onPressed: onClick,
+                  icon: Icon(
+                    isExpand ? Icons.expand_less : Icons.expand_more,
+                    color: MyTheme.color.black,
+                    size: AppSetting.setFontSize(60),
+                  ),
+                ),
+              ],
             ),
-            IconButton(
-              onPressed: onClick,
-              icon: Icon(
-                isExpand ? Icons.expand_less : Icons.expand_more,
-                color: MyTheme.color.black,
-                size: AppSetting.setFontSize(40),
-              ),
+            AnimatedCrossFade(
+              firstChild: Container(),
+              secondChild: child,
+              crossFadeState: isExpand
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 300),
             ),
           ],
         ),
-        AnimatedCrossFade(
-          firstChild: Container(),
-          secondChild: child,
-          crossFadeState: isExpand
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-          duration: const Duration(milliseconds: 300),
-        ),
-      ],
+      ),
     );
   }
 }

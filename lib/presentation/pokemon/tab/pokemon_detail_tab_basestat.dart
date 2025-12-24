@@ -232,10 +232,11 @@ class _DefensesCard extends StatelessWidget {
                       child: FittedBox(
                         child: Row(
                           children: [
-                            Icon(
+                            Image.asset(
                               IconUtils.instance.mapIconType(e.name ?? ""),
                               color: MyTheme.color.white,
-                              size: AppSetting.setWidth(40),
+                              width: AppSetting.setWidth(40),
+                              height: AppSetting.setHeight(40),
                             ),
                             Space.w(10),
                             Text(

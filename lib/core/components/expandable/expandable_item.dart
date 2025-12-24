@@ -9,7 +9,7 @@ class ExpandableItem extends StatelessWidget {
   final bool isExpand;
   final VoidCallback onClick;
 
-  const ExpandableItem({
+  const ExpandableItem({super.key, 
     required this.title,
     required this.child,
     required this.onClick,

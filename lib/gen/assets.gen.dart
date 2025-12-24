@@ -42,6 +42,10 @@ class $AssetsIconsGen {
   AssetGenImage get iconPokeball =>
       const AssetGenImage('assets/icons/icon_pokeball.png');
 
+  /// Directory path: assets/icons/pokemons_types
+  $AssetsIconsPokemonsTypesGen get pokemonsTypes =>
+      const $AssetsIconsPokemonsTypesGen();
+
   /// List of all assets
   List<AssetGenImage> get values => [
     iconArrowLeft,
@@ -71,6 +75,119 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [illustration404, logoFull, logoFullWhite];
+}
+
+class $AssetsIconsPokemonsTypesGen {
+  const $AssetsIconsPokemonsTypesGen();
+
+  /// File path: assets/icons/pokemons_types/bug.png
+  AssetGenImage get bug =>
+      const AssetGenImage('assets/icons/pokemons_types/bug.png');
+
+  /// File path: assets/icons/pokemons_types/dark.png
+  AssetGenImage get dark =>
+      const AssetGenImage('assets/icons/pokemons_types/dark.png');
+
+  /// File path: assets/icons/pokemons_types/dragon.png
+  AssetGenImage get dragon =>
+      const AssetGenImage('assets/icons/pokemons_types/dragon.png');
+
+  /// File path: assets/icons/pokemons_types/electric.png
+  AssetGenImage get electric =>
+      const AssetGenImage('assets/icons/pokemons_types/electric.png');
+
+  /// File path: assets/icons/pokemons_types/fairy.png
+  AssetGenImage get fairy =>
+      const AssetGenImage('assets/icons/pokemons_types/fairy.png');
+
+  /// File path: assets/icons/pokemons_types/fighting.png
+  AssetGenImage get fighting =>
+      const AssetGenImage('assets/icons/pokemons_types/fighting.png');
+
+  /// File path: assets/icons/pokemons_types/fire.png
+  AssetGenImage get fire =>
+      const AssetGenImage('assets/icons/pokemons_types/fire.png');
+
+  /// File path: assets/icons/pokemons_types/flying.png
+  AssetGenImage get flying =>
+      const AssetGenImage('assets/icons/pokemons_types/flying.png');
+
+  /// File path: assets/icons/pokemons_types/ghost.png
+  AssetGenImage get ghost =>
+      const AssetGenImage('assets/icons/pokemons_types/ghost.png');
+
+  /// File path: assets/icons/pokemons_types/grass.png
+  AssetGenImage get grass =>
+      const AssetGenImage('assets/icons/pokemons_types/grass.png');
+
+  /// File path: assets/icons/pokemons_types/ground.png
+  AssetGenImage get ground =>
+      const AssetGenImage('assets/icons/pokemons_types/ground.png');
+
+  /// File path: assets/icons/pokemons_types/ice.png
+  AssetGenImage get ice =>
+      const AssetGenImage('assets/icons/pokemons_types/ice.png');
+
+  /// File path: assets/icons/pokemons_types/normal.png
+  AssetGenImage get normal =>
+      const AssetGenImage('assets/icons/pokemons_types/normal.png');
+
+  /// File path: assets/icons/pokemons_types/poison.png
+  AssetGenImage get poison =>
+      const AssetGenImage('assets/icons/pokemons_types/poison.png');
+
+  /// File path: assets/icons/pokemons_types/psychic.png
+  AssetGenImage get psychic =>
+      const AssetGenImage('assets/icons/pokemons_types/psychic.png');
+
+  /// File path: assets/icons/pokemons_types/rock.png
+  AssetGenImage get rock =>
+      const AssetGenImage('assets/icons/pokemons_types/rock.png');
+
+  /// File path: assets/icons/pokemons_types/shadow.png
+  AssetGenImage get shadow =>
+      const AssetGenImage('assets/icons/pokemons_types/shadow.png');
+
+  /// File path: assets/icons/pokemons_types/steel.png
+  AssetGenImage get steel =>
+      const AssetGenImage('assets/icons/pokemons_types/steel.png');
+
+  /// File path: assets/icons/pokemons_types/stellar.png
+  AssetGenImage get stellar =>
+      const AssetGenImage('assets/icons/pokemons_types/stellar.png');
+
+  /// File path: assets/icons/pokemons_types/unknown.png
+  AssetGenImage get unknown =>
+      const AssetGenImage('assets/icons/pokemons_types/unknown.png');
+
+  /// File path: assets/icons/pokemons_types/water.png
+  AssetGenImage get water =>
+      const AssetGenImage('assets/icons/pokemons_types/water.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    bug,
+    dark,
+    dragon,
+    electric,
+    fairy,
+    fighting,
+    fire,
+    flying,
+    ghost,
+    grass,
+    ground,
+    ice,
+    normal,
+    poison,
+    psychic,
+    rock,
+    shadow,
+    steel,
+    stellar,
+    unknown,
+    water,
+  ];
 }
 
 class Assets {

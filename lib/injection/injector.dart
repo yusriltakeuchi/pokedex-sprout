@@ -1,16 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:pokedex/core/networks/api_client.dart';
 import 'package:pokedex/infrastructure/datasource/evolution/evolution_datasource.dart';
-import 'package:pokedex/infrastructure/datasource/evolution/evolution_datasource.dart';
 import 'package:pokedex/infrastructure/datasource/pokemon/pokemon_datasource.dart';
 import 'package:pokedex/infrastructure/datasource/species/species_datasource.dart';
 import 'package:pokedex/infrastructure/datasource/type/type_datasource.dart';
-import 'package:pokedex/infrastructure/datasource/type/type_datasource.dart';
-import 'package:pokedex/infrastructure/repositories/evolution/evolution_repository_impl.dart';
 import 'package:pokedex/infrastructure/repositories/evolution/evolution_repository_impl.dart';
 import 'package:pokedex/infrastructure/repositories/pokemon/pokemon_repository_impl.dart';
 import 'package:pokedex/infrastructure/repositories/species/species_repository_impl.dart';
-import 'package:pokedex/infrastructure/repositories/type/type_repository_impl.dart';
 import 'package:pokedex/infrastructure/repositories/type/type_repository_impl.dart';
 import 'package:pokedex/routing/route.dart';
 

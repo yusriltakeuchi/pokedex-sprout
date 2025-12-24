@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:pokedex/gen/assets.gen.dart';
 
 class IconUtils {
   static final IconUtils _instance = IconUtils._internal();
@@ -10,54 +9,54 @@ class IconUtils {
   // Public getter for accessing the instance
   static IconUtils get instance => _instance;
 
-  IconData mapIconType(String name) {
+  String mapIconType(String name) {
     /// Using lucide_icons_flutter
     // LucideIcons.
     switch (name.toLowerCase()) {
       case 'normal':
-        return LucideIcons.circle;
+        return Assets.icons.pokemonsTypes.fighting.path;
       case 'fighting':
-        return LucideIcons.handFist;
+        return Assets.icons.pokemonsTypes.fighting.path;
       case 'flying':
-        return LucideIcons.feather;
+        return Assets.icons.pokemonsTypes.flying.path;
       case 'poison':
-        return LucideIcons.skull;
+        return Assets.icons.pokemonsTypes.poison.path;
       case 'ground':
-        return LucideIcons.mountain;
+        return Assets.icons.pokemonsTypes.ground.path;
       case 'rock':
-        return LucideIcons.circle;
+        return Assets.icons.pokemonsTypes.rock.path;
       case 'bug':
-        return LucideIcons.bug;
+        return Assets.icons.pokemonsTypes.bug.path;
       case 'ghost':
-        return LucideIcons.ghost;
+        return Assets.icons.pokemonsTypes.ghost.path;
       case 'steel':
-        return LucideIcons.shield;
+        return Assets.icons.pokemonsTypes.steel.path;
       case 'fire':
-        return LucideIcons.flame;
+        return Assets.icons.pokemonsTypes.fire.path;
       case 'water':
-        return LucideIcons.droplet;
+        return Assets.icons.pokemonsTypes.water.path;
       case 'grass':
-        return LucideIcons.leaf;
+        return Assets.icons.pokemonsTypes.grass.path;
       case 'electric':
-        return LucideIcons.zap;
+        return Assets.icons.pokemonsTypes.electric.path;
       case 'psychic':
-        return LucideIcons.brain;
+        return Assets.icons.pokemonsTypes.psychic.path;
       case 'ice':
-        return LucideIcons.snowflake;
+        return Assets.icons.pokemonsTypes.ice.path;
       case 'dragon':
-        return LucideIcons.pawPrint;
+        return Assets.icons.pokemonsTypes.dragon.path;
       case 'dark':
-        return LucideIcons.moon;
+        return Assets.icons.pokemonsTypes.dark.path;
       case 'fairy':
-        return LucideIcons.wand;
+        return Assets.icons.pokemonsTypes.fairy.path;
       case 'stellar':
-        return LucideIcons.star;
+        return Assets.icons.pokemonsTypes.stellar.path;
       case 'unknown':
-        return LucideIcons.badgeQuestionMark;
+        return Assets.icons.pokemonsTypes.unknown.path;
       case 'shadow':
-        return LucideIcons.eyeOff;
+        return Assets.icons.pokemonsTypes.shadow.path;
       default:
-        return LucideIcons.badgeQuestionMark;
+        return Assets.icons.pokemonsTypes.fighting.path;
     }
   }
 }

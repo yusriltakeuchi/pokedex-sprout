@@ -1,6 +1,5 @@
 import 'package:pokedex/core/components/loading/loading_singlebox.dart';
 import 'package:pokedex/gen/assets.gen.dart';
-import 'package:pokedex/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

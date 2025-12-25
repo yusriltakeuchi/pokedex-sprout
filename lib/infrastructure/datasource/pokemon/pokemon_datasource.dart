@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:pokedex/core/constant/endpoint.dart';
 import 'package:pokedex/core/networks/api_client.dart';
 import 'package:pokedex/core/networks/error_handler.dart';
+import 'package:pokedex/domain/entities/machine/machine_entity.dart';
 import 'package:pokedex/domain/entities/moves/move_detail_entity.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/infrastructure/datasource/base/api_datasource_ext.dart';
@@ -17,5 +18,8 @@ class PokemonDataSource {
     => apiClient.pokemon.get(Endpoint.getPokemon.replaceAll("{name}", name));
 
   Future<Either<Failure, MoveDetailEntity>> getMoves(String id) async
-  => apiClient.move.get(Endpoint.getMoves.replaceAll("{id}", id));
+    => apiClient.move.get(Endpoint.getMoves.replaceAll("{id}", id));
+
+  Future<Either<Failure, MachineEntity>> getMachine(String id) async
+    => apiClient.machine.get(Endpoint.getMachine.replaceAll("{id}", id));
 }

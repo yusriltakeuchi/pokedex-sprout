@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:pokedex/core/networks/error_handler.dart';
+import 'package:pokedex/domain/entities/machine/machine_entity.dart';
 import 'package:pokedex/domain/entities/moves/move_detail_entity.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/domain/repositories/pokemon/pokemon_repository.dart';
@@ -21,4 +22,7 @@ class PokemonRepositoryImpl implements PokemonRepository {
   Future<Either<Failure, MoveDetailEntity>> getMoves(String id)
     => pokemonDataSource.getMoves(id);
 
+  @override
+  Future<Either<Failure, MachineEntity>> getMachine(String id)
+    => pokemonDataSource.getMachine(id);
 }

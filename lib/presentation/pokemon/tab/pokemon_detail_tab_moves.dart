@@ -116,6 +116,7 @@ class _MoveSections extends StatefulWidget {
 }
 
 class _MoveSectionsState extends State<_MoveSections> {
+  List<({MoveEntity move, MoveDetailEntity detail})>? combinedMoves;
   String _mapColumnHeaderLevel(int index) {
     switch (index) {
       case 0:
@@ -292,23 +293,23 @@ class _MoveSectionsState extends State<_MoveSections> {
     final tableWidth = screenWidth - (padding * 2);
 
     if (widget.type == "level-up" || widget.type == "machine") {
-      // Lv/TM | Move | Type | Cat | Power | Acc
+      /// Lv/TM | Move | Type | Cat | Power | Acc
       return [
-        TableColumn(width: tableWidth * 0.12), // Lv/TM - smaller
-        TableColumn(width: tableWidth * 0.26), // Move name - reduced
-        TableColumn(width: tableWidth * 0.12), // Type
-        TableColumn(width: tableWidth * 0.16), // Category
-        TableColumn(width: tableWidth * 0.14), // Power
-        TableColumn(width: tableWidth * 0.14), // Accuracy
+        TableColumn(width: tableWidth * 0.12), /// Lv/TM - smaller
+        TableColumn(width: tableWidth * 0.26), /// Move name - reduced
+        TableColumn(width: tableWidth * 0.12), /// Type
+        TableColumn(width: tableWidth * 0.16), /// Category
+        TableColumn(width: tableWidth * 0.14), /// Power
+        TableColumn(width: tableWidth * 0.14), /// Accuracy
       ];
     } else {
-      // Move | Type | Cat | Power | Acc
+      /// Move | Type | Cat | Power | Acc
       return [
-        TableColumn(width: tableWidth * 0.30), // Move name - reduced
-        TableColumn(width: tableWidth * 0.18), // Type
-        TableColumn(width: tableWidth * 0.20), // Category
-        TableColumn(width: tableWidth * 0.16), // Power
-        TableColumn(width: tableWidth * 0.16), // Accuracy
+        TableColumn(width: tableWidth * 0.30), /// Move name - reduced
+        TableColumn(width: tableWidth * 0.18), /// Type
+        TableColumn(width: tableWidth * 0.20), /// Category
+        TableColumn(width: tableWidth * 0.16), /// Power
+        TableColumn(width: tableWidth * 0.16), /// Accuracy
       ];
     }
   }
@@ -316,68 +317,70 @@ class _MoveSectionsState extends State<_MoveSections> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadMoveDetail();
-    });
+    if (widget.moves.isEmpty) {
+      combinedMoves = [];
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        loadMoveDetail();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetPokemonMovesBloc, GetPokemonMovesState>(
-      builder: (context, state) {
-        return state.maybeWhen(
-          orElse: () => const LoadingListView(),
-          loading: () => const LoadingListView(),
+    return BlocConsumer<GetPokemonMovesBloc, GetPokemonMovesState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          orElse: () {},
           loaded: (loadedMoves) {
-            // Validasi: pastikan bloc sudah selesai fetch semua moves
-            // Jika loadedMoves kosong, berarti masih loading atau semua gagal
-            if (loadedMoves.isEmpty) {
-              return const LoadingListView();
-            }
-            
-            // Create a map for quick lookup of move details by ID
+            combinedMoves = [];
+            /// Create a map for quick lookup of move details by ID
             final moveDetailsMap = <String, MoveDetailEntity>{};
             for (var detail in loadedMoves) {
               if (detail.id != null) {
                 moveDetailsMap[detail.id.toString()] = detail;
               }
             }
-            
-            // Combine widget.moves with their corresponding details
-            // Only include moves that have successfully loaded details
-            final List<({MoveEntity move, MoveDetailEntity detail})> combinedMoves = [];
-            
             for (var move in widget.moves) {
               final moveId = HelperUtils.instance.parseUrlId(move.move?.url ?? "");
               final moveDetail = moveDetailsMap[moveId];
-              
-              // Only add if we have the detail data
+              /// Only add if we have the detail data
               if (moveDetail != null && moveDetail.id != null) {
-                combinedMoves.add((move: move, detail: moveDetail));
+                combinedMoves?.add((move: move, detail: moveDetail));
               }
             }
-            
-            // If no moves loaded successfully after processing, show empty state
-            if (combinedMoves.isEmpty) {
+            setState(() {});
+          }
+        );
+      },
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () {
+            if (combinedMoves == null) {
+              return const LoadingListView();
+            }
+
+            if (combinedMoves!.isEmpty) {
               return Center(
                 child: Padding(
                   padding: EdgeInsets.all(AppSetting.setWidth(40)),
                   child: Text(
-                    'No moves available',
+                    'No moves for this category',
                     style: MyTheme.style.subtitle.copyWith(
-                      color: MyTheme.color.blackWhite,
+                      color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
+                      fontSize: AppSetting.setFontSize(30),
                     ),
                   ),
                 ),
               );
             }
-            
+
             return TableView.builder(
               physics: const BouncingScrollPhysics(),
               shrinkWrapVertical: true,
               columns: getTableColumn(),
-              rowCount: combinedMoves.length + 1, /// +1 untuk header
-              rowHeight: AppSetting.setHeight(90), // Reduced from 130 for compact view
+              rowCount: combinedMoves!.length + 1, /// +1 for header
+              rowHeight: AppSetting.setHeight(90),
               rowBuilder: (context, row, contentBuilder) {
                 return Material(
                   type: MaterialType.transparency,
@@ -427,8 +430,8 @@ class _MoveSectionsState extends State<_MoveSections> {
                       else {
                         final dataIndex = row - 1;
                         
-                        if (dataIndex < combinedMoves.length) {
-                          final combinedData = combinedMoves[dataIndex];
+                        if (dataIndex < combinedMoves!.length) {
+                          final combinedData = combinedMoves![dataIndex];
                           final move = combinedData.move;
                           final moveDetail = combinedData.detail;
                           
@@ -438,7 +441,6 @@ class _MoveSectionsState extends State<_MoveSections> {
                             column,
                           );
                           if (column == (widget.type == "level-up" || widget.type == "machine" ? 2 : 1)) {
-                            /// IMAGE TYPE column - Modern compact design
                             return Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppSetting.setWidth(8),
@@ -466,7 +468,6 @@ class _MoveSectionsState extends State<_MoveSections> {
                               ),
                             );
                           } else {
-                            /// OTHER COLUMNS - Compact and readable
                             return Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppSetting.setWidth(20),
@@ -498,6 +499,7 @@ class _MoveSectionsState extends State<_MoveSections> {
               },
             );
           },
+          loading: () => const LoadingListView(),
         );
       },
     );

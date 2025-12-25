@@ -7,6 +7,7 @@ class Endpoint {
   static const getPokemons = "/pokemon";
   static const getPokemon = "/pokemon/{name}";
   static const getMoves = "/move/{id}";
+  static const getMachine = "/machine/{id}";
   /// SPECIES ENDPOINT
   static const getSpecies = "/pokemon-species/{id}";
   /// TYPE ENDPOINT

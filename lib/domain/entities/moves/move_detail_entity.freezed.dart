@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MoveDetailEntity {
 
-@JsonKey(name: 'id') int? get id;@JsonKey(name: 'name') String? get name;@JsonKey(name: 'accuracy') int? get accuracy;@JsonKey(name: 'pp') int? get pp;@JsonKey(name: 'priority') int? get priority;@JsonKey(name: 'power') int? get power;@JsonKey(name: 'damage_class') MoveDamageClassEntity? get damageClass;@JsonKey(name: 'type') TypeEntity? get type;
+@JsonKey(name: 'id') int? get id;@JsonKey(name: 'name') String? get name;@JsonKey(name: 'accuracy') int? get accuracy;@JsonKey(name: 'pp') int? get pp;@JsonKey(name: 'priority') int? get priority;@JsonKey(name: 'power') int? get power;@JsonKey(name: 'damage_class') MoveDamageClassEntity? get damageClass;@JsonKey(name: 'type') TypeEntity? get type;@JsonKey(name: 'machines') List<MachineEntity>? get machines;
 /// Create a copy of MoveDetailEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MoveDetailEntityCopyWith<MoveDetailEntity> get copyWith => _$MoveDetailEntityCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MoveDetailEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.pp, pp) || other.pp == pp)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.power, power) || other.power == power)&&(identical(other.damageClass, damageClass) || other.damageClass == damageClass)&&(identical(other.type, type) || other.type == type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MoveDetailEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.pp, pp) || other.pp == pp)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.power, power) || other.power == power)&&(identical(other.damageClass, damageClass) || other.damageClass == damageClass)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other.machines, machines));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,accuracy,pp,priority,power,damageClass,type);
+int get hashCode => Object.hash(runtimeType,id,name,accuracy,pp,priority,power,damageClass,type,const DeepCollectionEquality().hash(machines));
 
 @override
 String toString() {
-  return 'MoveDetailEntity(id: $id, name: $name, accuracy: $accuracy, pp: $pp, priority: $priority, power: $power, damageClass: $damageClass, type: $type)';
+  return 'MoveDetailEntity(id: $id, name: $name, accuracy: $accuracy, pp: $pp, priority: $priority, power: $power, damageClass: $damageClass, type: $type, machines: $machines)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $MoveDetailEntityCopyWith<$Res>  {
   factory $MoveDetailEntityCopyWith(MoveDetailEntity value, $Res Function(MoveDetailEntity) _then) = _$MoveDetailEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'accuracy') int? accuracy,@JsonKey(name: 'pp') int? pp,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'power') int? power,@JsonKey(name: 'damage_class') MoveDamageClassEntity? damageClass,@JsonKey(name: 'type') TypeEntity? type
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'accuracy') int? accuracy,@JsonKey(name: 'pp') int? pp,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'power') int? power,@JsonKey(name: 'damage_class') MoveDamageClassEntity? damageClass,@JsonKey(name: 'type') TypeEntity? type,@JsonKey(name: 'machines') List<MachineEntity>? machines
 });
 
 
@@ -65,7 +65,7 @@ class _$MoveDetailEntityCopyWithImpl<$Res>
 
 /// Create a copy of MoveDetailEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? accuracy = freezed,Object? pp = freezed,Object? priority = freezed,Object? power = freezed,Object? damageClass = freezed,Object? type = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? accuracy = freezed,Object? pp = freezed,Object? priority = freezed,Object? power = freezed,Object? damageClass = freezed,Object? type = freezed,Object? machines = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,8 @@ as int?,priority: freezed == priority ? _self.priority : priority // ignore: cas
 as int?,power: freezed == power ? _self.power : power // ignore: cast_nullable_to_non_nullable
 as int?,damageClass: freezed == damageClass ? _self.damageClass : damageClass // ignore: cast_nullable_to_non_nullable
 as MoveDamageClassEntity?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as TypeEntity?,
+as TypeEntity?,machines: freezed == machines ? _self.machines : machines // ignore: cast_nullable_to_non_nullable
+as List<MachineEntity>?,
   ));
 }
 /// Create a copy of MoveDetailEntity
@@ -184,10 +185,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'accuracy')  int? accuracy, @JsonKey(name: 'pp')  int? pp, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'power')  int? power, @JsonKey(name: 'damage_class')  MoveDamageClassEntity? damageClass, @JsonKey(name: 'type')  TypeEntity? type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'accuracy')  int? accuracy, @JsonKey(name: 'pp')  int? pp, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'power')  int? power, @JsonKey(name: 'damage_class')  MoveDamageClassEntity? damageClass, @JsonKey(name: 'type')  TypeEntity? type, @JsonKey(name: 'machines')  List<MachineEntity>? machines)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MoveDetailEntity() when $default != null:
-return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that.power,_that.damageClass,_that.type);case _:
+return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that.power,_that.damageClass,_that.type,_that.machines);case _:
   return orElse();
 
 }
@@ -205,10 +206,10 @@ return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'accuracy')  int? accuracy, @JsonKey(name: 'pp')  int? pp, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'power')  int? power, @JsonKey(name: 'damage_class')  MoveDamageClassEntity? damageClass, @JsonKey(name: 'type')  TypeEntity? type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'accuracy')  int? accuracy, @JsonKey(name: 'pp')  int? pp, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'power')  int? power, @JsonKey(name: 'damage_class')  MoveDamageClassEntity? damageClass, @JsonKey(name: 'type')  TypeEntity? type, @JsonKey(name: 'machines')  List<MachineEntity>? machines)  $default,) {final _that = this;
 switch (_that) {
 case _MoveDetailEntity():
-return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that.power,_that.damageClass,_that.type);case _:
+return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that.power,_that.damageClass,_that.type,_that.machines);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -225,10 +226,10 @@ return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'accuracy')  int? accuracy, @JsonKey(name: 'pp')  int? pp, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'power')  int? power, @JsonKey(name: 'damage_class')  MoveDamageClassEntity? damageClass, @JsonKey(name: 'type')  TypeEntity? type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'name')  String? name, @JsonKey(name: 'accuracy')  int? accuracy, @JsonKey(name: 'pp')  int? pp, @JsonKey(name: 'priority')  int? priority, @JsonKey(name: 'power')  int? power, @JsonKey(name: 'damage_class')  MoveDamageClassEntity? damageClass, @JsonKey(name: 'type')  TypeEntity? type, @JsonKey(name: 'machines')  List<MachineEntity>? machines)?  $default,) {final _that = this;
 switch (_that) {
 case _MoveDetailEntity() when $default != null:
-return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that.power,_that.damageClass,_that.type);case _:
+return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that.power,_that.damageClass,_that.type,_that.machines);case _:
   return null;
 
 }
@@ -240,7 +241,7 @@ return $default(_that.id,_that.name,_that.accuracy,_that.pp,_that.priority,_that
 @JsonSerializable()
 
 class _MoveDetailEntity implements MoveDetailEntity {
-  const _MoveDetailEntity({@JsonKey(name: 'id') this.id, @JsonKey(name: 'name') this.name, @JsonKey(name: 'accuracy') this.accuracy, @JsonKey(name: 'pp') this.pp, @JsonKey(name: 'priority') this.priority, @JsonKey(name: 'power') this.power, @JsonKey(name: 'damage_class') this.damageClass, @JsonKey(name: 'type') this.type});
+  const _MoveDetailEntity({@JsonKey(name: 'id') this.id, @JsonKey(name: 'name') this.name, @JsonKey(name: 'accuracy') this.accuracy, @JsonKey(name: 'pp') this.pp, @JsonKey(name: 'priority') this.priority, @JsonKey(name: 'power') this.power, @JsonKey(name: 'damage_class') this.damageClass, @JsonKey(name: 'type') this.type, @JsonKey(name: 'machines') final  List<MachineEntity>? machines}): _machines = machines;
   factory _MoveDetailEntity.fromJson(Map<String, dynamic> json) => _$MoveDetailEntityFromJson(json);
 
 @override@JsonKey(name: 'id') final  int? id;
@@ -251,6 +252,15 @@ class _MoveDetailEntity implements MoveDetailEntity {
 @override@JsonKey(name: 'power') final  int? power;
 @override@JsonKey(name: 'damage_class') final  MoveDamageClassEntity? damageClass;
 @override@JsonKey(name: 'type') final  TypeEntity? type;
+ final  List<MachineEntity>? _machines;
+@override@JsonKey(name: 'machines') List<MachineEntity>? get machines {
+  final value = _machines;
+  if (value == null) return null;
+  if (_machines is EqualUnmodifiableListView) return _machines;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of MoveDetailEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -265,16 +275,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MoveDetailEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.pp, pp) || other.pp == pp)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.power, power) || other.power == power)&&(identical(other.damageClass, damageClass) || other.damageClass == damageClass)&&(identical(other.type, type) || other.type == type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MoveDetailEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.accuracy, accuracy) || other.accuracy == accuracy)&&(identical(other.pp, pp) || other.pp == pp)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.power, power) || other.power == power)&&(identical(other.damageClass, damageClass) || other.damageClass == damageClass)&&(identical(other.type, type) || other.type == type)&&const DeepCollectionEquality().equals(other._machines, _machines));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,accuracy,pp,priority,power,damageClass,type);
+int get hashCode => Object.hash(runtimeType,id,name,accuracy,pp,priority,power,damageClass,type,const DeepCollectionEquality().hash(_machines));
 
 @override
 String toString() {
-  return 'MoveDetailEntity(id: $id, name: $name, accuracy: $accuracy, pp: $pp, priority: $priority, power: $power, damageClass: $damageClass, type: $type)';
+  return 'MoveDetailEntity(id: $id, name: $name, accuracy: $accuracy, pp: $pp, priority: $priority, power: $power, damageClass: $damageClass, type: $type, machines: $machines)';
 }
 
 
@@ -285,7 +295,7 @@ abstract mixin class _$MoveDetailEntityCopyWith<$Res> implements $MoveDetailEnti
   factory _$MoveDetailEntityCopyWith(_MoveDetailEntity value, $Res Function(_MoveDetailEntity) _then) = __$MoveDetailEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'accuracy') int? accuracy,@JsonKey(name: 'pp') int? pp,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'power') int? power,@JsonKey(name: 'damage_class') MoveDamageClassEntity? damageClass,@JsonKey(name: 'type') TypeEntity? type
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'name') String? name,@JsonKey(name: 'accuracy') int? accuracy,@JsonKey(name: 'pp') int? pp,@JsonKey(name: 'priority') int? priority,@JsonKey(name: 'power') int? power,@JsonKey(name: 'damage_class') MoveDamageClassEntity? damageClass,@JsonKey(name: 'type') TypeEntity? type,@JsonKey(name: 'machines') List<MachineEntity>? machines
 });
 
 
@@ -302,7 +312,7 @@ class __$MoveDetailEntityCopyWithImpl<$Res>
 
 /// Create a copy of MoveDetailEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? accuracy = freezed,Object? pp = freezed,Object? priority = freezed,Object? power = freezed,Object? damageClass = freezed,Object? type = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? accuracy = freezed,Object? pp = freezed,Object? priority = freezed,Object? power = freezed,Object? damageClass = freezed,Object? type = freezed,Object? machines = freezed,}) {
   return _then(_MoveDetailEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -312,7 +322,8 @@ as int?,priority: freezed == priority ? _self.priority : priority // ignore: cas
 as int?,power: freezed == power ? _self.power : power // ignore: cast_nullable_to_non_nullable
 as int?,damageClass: freezed == damageClass ? _self.damageClass : damageClass // ignore: cast_nullable_to_non_nullable
 as MoveDamageClassEntity?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as TypeEntity?,
+as TypeEntity?,machines: freezed == machines ? _self._machines : machines // ignore: cast_nullable_to_non_nullable
+as List<MachineEntity>?,
   ));
 }
 

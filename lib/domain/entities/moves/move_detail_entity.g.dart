@@ -22,6 +22,9 @@ _MoveDetailEntity _$MoveDetailEntityFromJson(Map<String, dynamic> json) =>
       type: json['type'] == null
           ? null
           : TypeEntity.fromJson(json['type'] as Map<String, dynamic>),
+      machines: (json['machines'] as List<dynamic>?)
+          ?.map((e) => MachineEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MoveDetailEntityToJson(_MoveDetailEntity instance) =>
@@ -34,4 +37,5 @@ Map<String, dynamic> _$MoveDetailEntityToJson(_MoveDetailEntity instance) =>
       'power': instance.power,
       'damage_class': instance.damageClass,
       'type': instance.type,
+      'machines': instance.machines,
     };

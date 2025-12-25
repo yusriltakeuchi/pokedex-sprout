@@ -34,6 +34,10 @@ class $AssetsIconsGen {
   AssetGenImage get iconFilter =>
       const AssetGenImage('assets/icons/icon_filter.png');
 
+  /// File path: assets/icons/icon_folder_favorite.png
+  AssetGenImage get iconFolderFavorite =>
+      const AssetGenImage('assets/icons/icon_folder_favorite.png');
+
   /// File path: assets/icons/icon_male.png
   AssetGenImage get iconMale =>
       const AssetGenImage('assets/icons/icon_male.png');
@@ -53,6 +57,7 @@ class $AssetsIconsGen {
     iconFavoriteFilled,
     iconFemale,
     iconFilter,
+    iconFolderFavorite,
     iconMale,
     iconPokeball,
   ];

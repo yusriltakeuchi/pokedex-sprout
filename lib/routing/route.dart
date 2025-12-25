@@ -11,6 +11,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SplashRoute.page, initial: true),
     AutoRoute(page: HomeRoute.page),
     AutoRoute(page: PokemonDetailRoute.page),
+    AutoRoute(page: FavoriteRoute.page),
   ];
   @override
   List<AutoRouteGuard> get guards => [];

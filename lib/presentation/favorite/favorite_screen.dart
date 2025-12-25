@@ -1,59 +1,44 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex/bloc/pokemon/get_pokemon_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:pokedex/bloc/favorite/get_favorite_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/core/components/button/icon_click_button.dart';
 import 'package:pokedex/core/components/idle/idle_item.dart';
 import 'package:pokedex/core/components/loading/loading_grid.dart';
 import 'package:pokedex/core/components/pokemon/pokemon_item.dart';
-import 'package:pokedex/domain/dto/base_filter/base_filter_dto.dart';
 import 'package:pokedex/gen/assets.gen.dart';
 import 'package:pokedex/routing/route.gr.dart';
 import 'package:pokedex/theme/theme.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class FavoriteScreen extends StatelessWidget {
+  const FavoriteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider<GetPokemonBloc>(
-        create: (context) =>
-            GetPokemonBloc()..getPokemons(BaseFilterDTO(limit: 20, offset: 0)),
-        child: HomeBody(),
+      body: BlocProvider<GetFavoriteBloc>(
+        create: (context) => GetFavoriteBloc()..getFavorites(),
+        child: FavoriteBody(),
       ),
     );
   }
 }
 
-class HomeBody extends StatefulWidget {
-  const HomeBody({super.key});
+class FavoriteBody extends StatefulWidget {
+  const FavoriteBody({super.key});
 
   @override
-  State<HomeBody> createState() => _HomeBodyState();
+  State<FavoriteBody> createState() => _FavoriteBodyState();
 }
 
-class _HomeBodyState extends State<HomeBody> {
+class _FavoriteBodyState extends State<FavoriteBody> {
   bool isOnTop = true;
   ScrollController? _scrollController;
 
-  /// Threshold to trigger load more
-  final double threshold = 200.0;
-
-  /// Handling scroll listener to load more data
   void _scrollListener() {
-    if (!_scrollController!.hasClients) return;
-    if (_scrollController!.position.pixels >=
-            _scrollController!.position.maxScrollExtent - threshold &&
-        !_scrollController!.position.outOfRange) {
-      if (mounted) {
-        /// Load more pokemons
-        context.read<GetPokemonBloc>().loadMore();
-      }
-    }
-
     /// Handle on top or scroll
     if (_scrollController!.position.pixels > 0) {
       if (isOnTop) {
@@ -91,9 +76,7 @@ class _HomeBodyState extends State<HomeBody> {
     return Stack(
       children: [
         RefreshIndicator(
-          onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
-            BaseFilterDTO(limit: 20, offset: 0),
-          ),
+          onRefresh: () => context.read<GetFavoriteBloc>().getFavorites(),
           child: SingleChildScrollView(
             controller: _scrollController,
             physics: const BouncingScrollPhysics(),
@@ -137,24 +120,22 @@ class _AppBarContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: .spaceBetween,
       children: [
-        Expanded(
-          child: Text(
-            "Pokedex",
-            style: MyTheme.style.title.copyWith(
-              fontSize: AppSetting.setFontSize(60),
-              color: MyTheme.color.white,
-            ),
-          ),
-        ),
-        IconButton(
-          icon: Assets.icons.iconFolderFavorite.image(
+        IconClickButton(
+          icon: Assets.icons.iconArrowLeft.image(
             width: AppSetting.setWidth(80),
             height: AppSetting.setHeight(80),
+            color: Colors.white,
+          ),
+          onClick: () => context.router.maybePop(),
+        ),
+        Space.w(20),
+        Text(
+          "Favorites",
+          style: MyTheme.style.title.copyWith(
+            fontSize: AppSetting.setFontSize(60),
             color: MyTheme.color.white,
           ),
-          onPressed: () => context.router.push(const FavoriteRoute()),
         ),
       ],
     );
@@ -202,7 +183,7 @@ class _PokemonSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetPokemonBloc, GetPokemonState>(
+    return BlocBuilder<GetFavoriteBloc, GetFavoriteState>(
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () => const SizedBox(),
@@ -211,66 +192,46 @@ class _PokemonSections extends StatelessWidget {
             iconPath: Assets.images.illustration404.path,
             color: MyTheme.color.blackWhite,
             useCenterText: true,
-            onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
-              BaseFilterDTO(limit: 20, offset: 0),
-            ),
+            onRefresh: () => context.read<GetFavoriteBloc>().getFavorites(),
           ),
           loading: () {
             final crossAxisCount = AppSetting.isPortrait(context) ? 2 : 4;
             return LoadingGrid(
-              crossAxis: crossAxisCount, 
-              height: 300, 
+              crossAxis: crossAxisCount,
+              height: 300,
               length: crossAxisCount * 4,
             );
           },
-          loaded: (pokemons, offset, limit, hasReachedMax, onLoadMore) {
+          loaded: (pokemons) {
             if (pokemons.isEmpty) {
               return IdleNoItemCenter(
                 title: "No Pokemons Found",
                 iconPath: Assets.images.illustration404.path,
                 color: MyTheme.color.blackWhite,
                 useCenterText: true,
-                onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
-                  BaseFilterDTO(limit: 20, offset: 0)
-                ),
+                onRefresh: () => context.read<GetFavoriteBloc>().getFavorites(),
               );
             }
 
             final crossAxisCount = AppSetting.isPortrait(context) ? 2 : 4;
-            return Column(
-              crossAxisAlignment: .start,
-              children: [
-                AlignedGridView.count(
-                  crossAxisCount: crossAxisCount,
-                  padding: const EdgeInsets.all(0),
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: pokemons.length,
-                  shrinkWrap: true,
-                  mainAxisSpacing: AppSetting.setHeight(40),
-                  crossAxisSpacing: AppSetting.setWidth(40),
-                  itemBuilder: (context, index) {
-                    final pokemon = pokemons[index];
-                    return PokemonItem(
-                      pokemon: pokemon,
-                      onClick: () => context.router.push(
-                        PokemonDetailRoute(pokemon: pokemon),
-                      ),
-                    );
+            return AlignedGridView.count(
+              crossAxisCount: crossAxisCount,
+              padding: const EdgeInsets.all(0),
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: pokemons.length,
+              shrinkWrap: true,
+              mainAxisSpacing: AppSetting.setHeight(40),
+              crossAxisSpacing: AppSetting.setWidth(40),
+              itemBuilder: (context, index) {
+                final pokemon = pokemons[index];
+                return PokemonItem(
+                  pokemon: pokemon,
+                  onClick: () async {
+                    await context.router.push(PokemonDetailRoute(pokemon: pokemon));
+                    context.read<GetFavoriteBloc>().getFavorites();
                   },
-                ),
-                if (onLoadMore)
-                  Padding(
-                    padding: .only(
-                      top: AppSetting.setHeight(40),
-                      bottom: AppSetting.setHeight(20),
-                    ),
-                    child: LoadingGrid(
-                      crossAxis: crossAxisCount, 
-                      height: 300, 
-                      length: crossAxisCount * 2,
-                    ),
-                  ),
-              ],
+                );
+              },
             );
           },
         );
@@ -285,7 +246,7 @@ class _BackgroundHeaderColor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heightPercentage = AppSetting.isPortrait(context) ? 0.2 : 0.35;
-    
+
     return Container(
       width: double.infinity,
       height: AppSetting.deviceHeight * heightPercentage,

@@ -42,6 +42,8 @@ dependencies:
   material_table_view: ^5.5.2
   # Routing
   auto_route: ^11.1.0
+  # Local storage
+  shared_preferences: ^2.5.4
   # HTTP Client
   dio_smart_retry: ^7.0.1
   dio: ^5.9.0

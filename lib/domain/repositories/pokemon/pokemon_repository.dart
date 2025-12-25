@@ -10,4 +10,8 @@ abstract class PokemonRepository {
   Future<Either<Failure, List<PokemonEntity>>> getPokemons({Map<String, dynamic>? params});
   Future<Either<Failure, MoveDetailEntity>> getMoves(String id);
   Future<Either<Failure, MachineEntity>> getMachine(String id);
+  Future<Either<Failure, List<PokemonEntity>>> getFavoritePokemons();
+  Future<Either<Failure, void>> addFavoritePokemon(PokemonEntity pokemon);
+  Future<Either<Failure, void>> removeFavoritePokemon(PokemonEntity pokemon);
+  Future<Either<Failure, bool>> isFavoritePokemon(PokemonEntity pokemon);
 }

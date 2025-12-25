@@ -2,6 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
+import 'package:pokedex/bloc/favorite/add_favorite_bloc.dart';
+import 'package:pokedex/bloc/favorite/add_favorite_bloc.dart';
+import 'package:pokedex/bloc/favorite/is_favorite_bloc.dart';
+import 'package:pokedex/bloc/favorite/is_favorite_bloc.dart';
+import 'package:pokedex/bloc/favorite/remove_favorite_bloc.dart';
 import 'package:pokedex/bloc/pokemon/get_pokemon_machine_bloc.dart';
 import 'package:pokedex/bloc/pokemon/get_pokemon_moves_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
@@ -9,6 +14,7 @@ import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
 import 'package:pokedex/core/components/button/icon_click_button.dart';
 import 'package:pokedex/core/components/click/click_item.dart';
+import 'package:pokedex/core/components/dialog/snackbar_item.dart';
 import 'package:pokedex/core/components/image/image_cache.dart';
 import 'package:pokedex/domain/entities/pokemon/pokemon_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
@@ -51,6 +57,13 @@ class PokemonDetailScreen extends StatelessWidget {
           ),
           BlocProvider<GetPokemonMachineBloc>(
             create: (context) => GetPokemonMachineBloc(),
+          ),
+          BlocProvider<IsFavoriteBloc>(
+            create: (context) => IsFavoriteBloc()..checkIsFavorite(pokemon),
+          ),
+          BlocProvider<AddFavoriteBloc>(create: (context) => AddFavoriteBloc()),
+          BlocProvider<RemoveFavoriteBloc>(
+            create: (context) => RemoveFavoriteBloc(),
           ),
         ],
         child: BlocListener<GetSpeciesBloc, GetSpeciesState>(
@@ -199,6 +212,7 @@ class _ContentSectionState extends State<_ContentSection> {
                         ],
                       ),
                     ),
+
                     /// Right side - Tabs and content (full height)
                     Expanded(
                       flex: 6,
@@ -551,11 +565,80 @@ class _ContentSectionState extends State<_ContentSection> {
             ),
             onClick: () => context.router.maybePop(),
           ),
-          Image.asset(
-            Assets.icons.iconFavorite.path,
-            width: AppSetting.setWidth(60),
-            height: AppSetting.setHeight(60),
-            color: Colors.white,
+          BlocBuilder<IsFavoriteBloc, IsFavoriteState>(
+            builder: (context, state) {
+              return state.maybeWhen(
+                orElse: () => Image.asset(
+                  Assets.icons.iconFavorite.path,
+                  width: AppSetting.setWidth(60),
+                  height: AppSetting.setHeight(60),
+                  color: Colors.white,
+                ),
+                loaded: (isFavorited) {
+                  return GestureDetector(
+                    onTap: () {
+                      if (isFavorited) {
+                        context.read<RemoveFavoriteBloc>().removeFavorite(
+                          widget.pokemon,
+                        );
+                      } else {
+                        context.read<AddFavoriteBloc>().addFavorite(
+                          widget.pokemon,
+                        );
+                      }
+                    },
+                    child: MultiBlocListener(
+                      listeners: [
+                        BlocListener<AddFavoriteBloc, AddFavoriteState>(
+                          listener: (context, state) {
+                            state.maybeWhen(
+                              orElse: () {},
+                              loaded: () {
+                                context.read<IsFavoriteBloc>().checkIsFavorite(
+                                  widget.pokemon,
+                                );
+                              },
+                              error: (message) {
+                                showSnackbar(
+                                  title: message,
+                                  color: MyTheme.color.danger,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        BlocListener<RemoveFavoriteBloc, RemoveFavoriteState>(
+                          listener: (context, state) {
+                            state.maybeWhen(
+                              orElse: () {},
+                              loaded: () {
+                                context.read<IsFavoriteBloc>().checkIsFavorite(
+                                  widget.pokemon,
+                                );
+                              },
+                              error: (message) {
+                                showSnackbar(
+                                  title: message,
+                                  color: MyTheme.color.danger,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                      child: Image.asset(
+                        isFavorited
+                            ? Assets.icons.iconFavoriteFilled.path
+                            : Assets.icons.iconFavorite.path,
+                        width: AppSetting.setWidth(60),
+                        height: AppSetting.setHeight(60),
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ],
       ),

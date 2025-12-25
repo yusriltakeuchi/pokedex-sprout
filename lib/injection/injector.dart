@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:pokedex/core/networks/api_client.dart';
 import 'package:pokedex/infrastructure/datasource/evolution/evolution_datasource.dart';
 import 'package:pokedex/infrastructure/datasource/pokemon/pokemon_datasource.dart';
+import 'package:pokedex/infrastructure/datasource/pokemon/pokemon_local_datasource.dart';
+import 'package:pokedex/infrastructure/datasource/pokemon/pokemon_local_datasource.dart';
 import 'package:pokedex/infrastructure/datasource/species/species_datasource.dart';
 import 'package:pokedex/infrastructure/datasource/type/type_datasource.dart';
 import 'package:pokedex/infrastructure/repositories/evolution/evolution_repository_impl.dart';
@@ -23,6 +25,9 @@ Future<void> setupInjector() async {
   inject.registerLazySingleton<PokemonDataSource>(
     () => PokemonDataSource(inject<ApiClient>()),
   );
+  inject.registerLazySingleton<PokemonLocalDatasource>(
+    () => PokemonLocalDatasource(),
+  );
   inject.registerLazySingleton<SpeciesDataSource>(
     () => SpeciesDataSource(inject<ApiClient>()),
   );
@@ -39,6 +44,7 @@ Future<void> setupInjector() async {
   inject.registerLazySingleton<PokemonRepositoryImpl>(
     () => PokemonRepositoryImpl(
       inject<PokemonDataSource>(),
+      inject<PokemonLocalDatasource>(),
     ),
   );
   inject.registerLazySingleton<SpeciesRepositoryImpl>(

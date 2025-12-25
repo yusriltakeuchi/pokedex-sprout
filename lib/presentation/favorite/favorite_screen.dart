@@ -231,9 +231,12 @@ class _PokemonSections extends StatelessWidget {
                     final pokemon = pokemons[index];
                     return PokemonItem(
                       pokemon: pokemon,
-                      onClick: () => context.router.push(
-                        PokemonDetailRoute(pokemon: pokemon),
-                      ),
+                      onClick: () async {
+                        await context.router.push(
+                          PokemonDetailRoute(pokemon: pokemon),
+                        );
+                        context.read<GetFavoriteBloc>().getFavorites();
+                      }
                     );
                   },
                 ),

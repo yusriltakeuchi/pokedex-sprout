@@ -54,7 +54,7 @@ class _SplashBodyState extends State<SplashBody> {
               : AppSetting.deviceWidth * 0.25)
         : (isPortrait
               ? AppSetting.deviceWidth * 0.5
-              : AppSetting.deviceWidth * 0.35);
+              : AppSetting.deviceWidth * 0.25);
 
     final versionFontSize = isTablet
         ? (isPortrait ? 30.0 : 35.0)

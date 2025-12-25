@@ -13,17 +13,18 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
     return Scaffold(
       backgroundColor: MyTheme.color.primary,
       body: const SplashBody(),
     );
   }
 }
-
 
 class SplashBody extends StatefulWidget {
   const SplashBody({super.key});
@@ -33,7 +34,6 @@ class SplashBody extends StatefulWidget {
 }
 
 class _SplashBodyState extends State<SplashBody> {
-
   @override
   void initState() {
     super.initState();
@@ -42,8 +42,24 @@ class _SplashBodyState extends State<SplashBody> {
       context.router.replaceAll([const HomeRoute()]);
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    final isPortrait = AppSetting.isPortrait(context);
+    final isTablet = AppSetting.isTablet;
+
+    final logoWidth = isTablet
+        ? (isPortrait
+              ? AppSetting.deviceWidth * 0.4
+              : AppSetting.deviceWidth * 0.25)
+        : (isPortrait
+              ? AppSetting.deviceWidth * 0.5
+              : AppSetting.deviceWidth * 0.35);
+
+    final versionFontSize = isTablet
+        ? (isPortrait ? 30.0 : 35.0)
+        : (isPortrait ? 40.0 : 30.0);
+
     return Stack(
       children: [
         Center(
@@ -52,11 +68,7 @@ class _SplashBodyState extends State<SplashBody> {
             duration: const Duration(milliseconds: 300),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Assets.images.logoFullWhite.image(
-                  width: AppSetting.deviceWidth * 0.5,
-                ),
-              ],
+              children: [Assets.images.logoFullWhite.image(width: logoWidth)],
             ),
           ),
         ),
@@ -72,7 +84,7 @@ class _SplashBodyState extends State<SplashBody> {
                     "Ver 1.0.0",
                     style: MyTheme.style.subtitle.copyWith(
                       color: MyTheme.color.white,
-                      fontSize: AppSetting.setFontSize(40),
+                      fontSize: AppSetting.setFontSize(versionFontSize),
                     ),
                   ),
                   Space.h(50),
@@ -84,5 +96,4 @@ class _SplashBodyState extends State<SplashBody> {
       ],
     );
   }
-
 }

@@ -221,12 +221,7 @@ class _ContentSectionState extends State<_ContentSection> {
                         margin: EdgeInsets.only(right: AppSetting.setWidth(20)),
                         decoration: BoxDecoration(
                           color: MyTheme.color.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(AppSetting.setWidth(30)),
-                            bottomLeft: Radius.circular(
-                              AppSetting.setWidth(30),
-                            ),
-                          ),
+                          borderRadius: BorderRadius.circular(30),
                         ),
                         padding: EdgeInsets.symmetric(
                           horizontal: AppSetting.setWidth(40),

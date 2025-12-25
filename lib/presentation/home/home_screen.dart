@@ -211,6 +211,7 @@ class _PokemonSections extends StatelessWidget {
             iconPath: Assets.images.illustration404.path,
             color: MyTheme.color.blackWhite,
             useCenterText: true,
+            useDeviceHeight: false,
             onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
               BaseFilterDTO(limit: 20, offset: 0),
             ),
@@ -218,8 +219,8 @@ class _PokemonSections extends StatelessWidget {
           loading: () {
             final crossAxisCount = AppSetting.isPortrait(context) ? 2 : 4;
             return LoadingGrid(
-              crossAxis: crossAxisCount, 
-              height: 300, 
+              crossAxis: crossAxisCount,
+              height: 300,
               length: crossAxisCount * 4,
             );
           },
@@ -229,9 +230,10 @@ class _PokemonSections extends StatelessWidget {
                 title: "No Pokemons Found",
                 iconPath: Assets.images.illustration404.path,
                 color: MyTheme.color.blackWhite,
+                useDeviceHeight: false,
                 useCenterText: true,
                 onRefresh: () => context.read<GetPokemonBloc>().getPokemons(
-                  BaseFilterDTO(limit: 20, offset: 0)
+                  BaseFilterDTO(limit: 20, offset: 0),
                 ),
               );
             }
@@ -265,8 +267,8 @@ class _PokemonSections extends StatelessWidget {
                       bottom: AppSetting.setHeight(20),
                     ),
                     child: LoadingGrid(
-                      crossAxis: crossAxisCount, 
-                      height: 300, 
+                      crossAxis: crossAxisCount,
+                      height: 300,
                       length: crossAxisCount * 2,
                     ),
                   ),
@@ -285,7 +287,7 @@ class _BackgroundHeaderColor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heightPercentage = AppSetting.isPortrait(context) ? 0.2 : 0.35;
-    
+
     return Container(
       width: double.infinity,
       height: AppSetting.deviceHeight * heightPercentage,

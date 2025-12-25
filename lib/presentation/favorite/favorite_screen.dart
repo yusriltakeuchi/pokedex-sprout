@@ -191,6 +191,7 @@ class _PokemonSections extends StatelessWidget {
             title: "Something went wrong",
             iconPath: Assets.images.illustration404.path,
             color: MyTheme.color.blackWhite,
+            useDeviceHeight: false,
             useCenterText: true,
             onRefresh: () => context.read<GetFavoriteBloc>().getFavorites(),
           ),
@@ -209,29 +210,34 @@ class _PokemonSections extends StatelessWidget {
                 iconPath: Assets.images.illustration404.path,
                 color: MyTheme.color.blackWhite,
                 useCenterText: true,
+                useDeviceHeight: false,
                 onRefresh: () => context.read<GetFavoriteBloc>().getFavorites(),
               );
             }
 
             final crossAxisCount = AppSetting.isPortrait(context) ? 2 : 4;
-            return AlignedGridView.count(
-              crossAxisCount: crossAxisCount,
-              padding: const EdgeInsets.all(0),
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: pokemons.length,
-              shrinkWrap: true,
-              mainAxisSpacing: AppSetting.setHeight(40),
-              crossAxisSpacing: AppSetting.setWidth(40),
-              itemBuilder: (context, index) {
-                final pokemon = pokemons[index];
-                return PokemonItem(
-                  pokemon: pokemon,
-                  onClick: () async {
-                    await context.router.push(PokemonDetailRoute(pokemon: pokemon));
-                    context.read<GetFavoriteBloc>().getFavorites();
+            return Column(
+              crossAxisAlignment: .start,
+              children: [
+                AlignedGridView.count(
+                  crossAxisCount: crossAxisCount,
+                  padding: const EdgeInsets.all(0),
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: pokemons.length,
+                  shrinkWrap: true,
+                  mainAxisSpacing: AppSetting.setHeight(40),
+                  crossAxisSpacing: AppSetting.setWidth(40),
+                  itemBuilder: (context, index) {
+                    final pokemon = pokemons[index];
+                    return PokemonItem(
+                      pokemon: pokemon,
+                      onClick: () => context.router.push(
+                        PokemonDetailRoute(pokemon: pokemon),
+                      ),
+                    );
                   },
-                );
-              },
+                ),
+              ],
             );
           },
         );

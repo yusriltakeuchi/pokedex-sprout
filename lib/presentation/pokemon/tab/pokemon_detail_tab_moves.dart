@@ -323,48 +323,50 @@ class _MoveSectionsState extends State<_MoveSections> {
     final screenWidth = MediaQuery.of(context).size.width;
     final padding = AppSetting.setWidth(30);
     final tableWidth = screenWidth - (padding * 2);
+    final isPortrait = AppSetting.isPortrait(context);
 
     if (widget.type == "level-up" || widget.type == "machine") {
       /// Lv/TM | Move | Type | Cat | Power | Acc
-      return [
-        TableColumn(width: tableWidth * 0.14),
-
-        /// Lv/TM - smaller
-        TableColumn(width: tableWidth * 0.26),
-
-        /// Move name - reduced
-        TableColumn(width: tableWidth * 0.12),
-
-        /// Type
-        TableColumn(width: tableWidth * 0.16),
-
-        /// Category
-        TableColumn(width: tableWidth * 0.14),
-
-        /// Power
-        TableColumn(width: tableWidth * 0.14),
-
-        /// Accuracy
-      ];
+      if (isPortrait) {
+        return [
+          TableColumn(width: tableWidth * 0.14),  /// Lv/TM
+          TableColumn(width: tableWidth * 0.26),  /// Move name
+          TableColumn(width: tableWidth * 0.12),  /// Type
+          TableColumn(width: tableWidth * 0.16),  /// Category
+          TableColumn(width: tableWidth * 0.14),  /// Power
+          TableColumn(width: tableWidth * 0.14),  /// Accuracy
+        ];
+      } else {
+        /// Landscape mode - lebih kecil
+        return [
+          TableColumn(width: tableWidth * 0.10),  /// Lv/TM - smaller
+          TableColumn(width: tableWidth * 0.14),  /// Move name - smaller
+          TableColumn(width: tableWidth * 0.10),  /// Type - smaller
+          TableColumn(width: tableWidth * 0.10),  /// Category
+          TableColumn(width: tableWidth * 0.10),  /// Power
+          TableColumn(width: tableWidth * 0.10),  /// Accuracy
+        ];
+      }
     } else {
       /// Move | Type | Cat | Power | Acc
-      return [
-        TableColumn(width: tableWidth * 0.30),
-
-        /// Move name - reduced
-        TableColumn(width: tableWidth * 0.18),
-
-        /// Type
-        TableColumn(width: tableWidth * 0.20),
-
-        /// Category
-        TableColumn(width: tableWidth * 0.16),
-
-        /// Power
-        TableColumn(width: tableWidth * 0.16),
-
-        /// Accuracy
-      ];
+      if (isPortrait) {
+        return [
+          TableColumn(width: tableWidth * 0.30),  /// Move name
+          TableColumn(width: tableWidth * 0.18),  /// Type
+          TableColumn(width: tableWidth * 0.20),  /// Category
+          TableColumn(width: tableWidth * 0.16),  /// Power
+          TableColumn(width: tableWidth * 0.16),  /// Accuracy
+        ];
+      } else {
+        /// Landscape mode - lebih kecil
+        return [
+          TableColumn(width: tableWidth * 0.15),  /// Move name - smaller
+          TableColumn(width: tableWidth * 0.10),  /// Type - smaller
+          TableColumn(width: tableWidth * 0.10),  /// Category
+          TableColumn(width: tableWidth * 0.10),  /// Power
+          TableColumn(width: tableWidth * 0.10),  /// Accuracy
+        ];
+      }
     }
   }
 

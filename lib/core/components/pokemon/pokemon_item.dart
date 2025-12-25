@@ -17,6 +17,17 @@ class PokemonItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = pokemon.types?.first.type?.color ?? Colors.grey;
     bool isPortrait = AppSetting.isPortrait(context);
+    bool isTablet = AppSetting.isTablet;
+
+    final verticalPadding = isTablet
+        ? (isPortrait ? 80.0 : 60.0)
+        : (isPortrait ? 60.0 : 40.0);
+    final horizontalPadding = isTablet ? 30.0 : 40.0;
+    final imageSize = isTablet
+        ? (isPortrait ? 320.0 : 260.0)
+        : (isPortrait ? 260.0 : 200.0);
+    final pokeballSize = isTablet ? 350.0 : 280.0;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(borderRadius: .circular(20), color: color),
@@ -27,8 +38,8 @@ class PokemonItem extends StatelessWidget {
           children: [
             Padding(
               padding: .symmetric(
-                vertical: AppSetting.setHeight(isPortrait ? 60 : 40),
-                horizontal: AppSetting.setWidth(40),
+                vertical: AppSetting.setHeight(verticalPadding),
+                horizontal: AppSetting.setWidth(horizontalPadding),
               ),
               child: Row(
                 children: [
@@ -46,18 +57,25 @@ class PokemonItem extends StatelessWidget {
                       Space.h(10),
                       Column(
                         crossAxisAlignment: .start,
-                        children: List.generate(pokemon.types?.length ?? 0, (
-                          index,
-                        ) {
-                          final type =
-                              pokemon.types?[index].type?.name ?? "unknown";
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              bottom: AppSetting.setHeight(15),
+                        children: [
+                          ...List.generate(pokemon.types?.length ?? 0, (index) {
+                            final type =
+                                pokemon.types?[index].type?.name ?? "unknown";
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: AppSetting.setHeight(15),
+                              ),
+                              child: _typeItem(type),
+                            );
+                          }),
+                          if ((pokemon.types?.length ?? 0) == 1)
+                            SizedBox(
+                              height:
+                                  AppSetting.setHeight(5) * 2 +
+                                  AppSetting.setFontSize(30) +
+                                  AppSetting.setHeight(15),
                             ),
-                            child: _typeItem(type),
-                          );
-                        }),
+                        ],
                       ),
                     ],
                   ),
@@ -68,34 +86,24 @@ class PokemonItem extends StatelessWidget {
               bottom: -20,
               right: -15,
               child: Assets.icons.iconPokeball.image(
-                width: AppSetting.setWidth(280),
-                height: AppSetting.setHeight(280),
+                width: AppSetting.setWidth(pokeballSize),
+                height: AppSetting.setHeight(pokeballSize),
                 color: Colors.white.withValues(alpha: 0.3),
               ),
             ),
 
-            /// Show pokemon images from sprites other home
             Positioned(
               bottom: 0,
               right: 0,
               child: pokemon.sprites?.other?.home?.frontDefault != null
                   ? Hero(
                       tag: "pokemon_image_${pokemon.id}",
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final imageSize = isPortrait
-                              ? 260.0
-                              : 200.0;
-
-                          return ImageCaching(
-                            imageUrl:
-                                pokemon.sprites?.other?.home?.frontDefault ??
-                                "",
-                            width: AppSetting.setWidth(imageSize),
-                            height: AppSetting.setHeight(imageSize),
-                            fit: BoxFit.contain,
-                          );
-                        },
+                      child: ImageCaching(
+                        imageUrl:
+                            pokemon.sprites?.other?.home?.frontDefault ?? "",
+                        width: AppSetting.setWidth(imageSize),
+                        height: AppSetting.setHeight(imageSize),
+                        fit: BoxFit.contain,
                       ),
                     )
                   : SizedBox(

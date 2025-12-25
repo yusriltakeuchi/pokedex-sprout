@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MachineEntity {
 
-@JsonKey(name: 'id') int? get id;@JsonKey(name: 'url') String? get url;@JsonKey(name: 'item') ItemEntity? get item;
+@JsonKey(name: 'id') int? get id;@JsonKey(name: 'url') String? get url;@JsonKey(name: 'item') ItemEntity? get item;@JsonKey(name: 'move') MoveInfoEntity? get move; dynamic get x;
 /// Create a copy of MachineEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MachineEntityCopyWith<MachineEntity> get copyWith => _$MachineEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MachineEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.item, item) || other.item == item));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MachineEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.item, item) || other.item == item)&&(identical(other.move, move) || other.move == move)&&const DeepCollectionEquality().equals(other.x, x));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,url,item);
+int get hashCode => Object.hash(runtimeType,id,url,item,move,const DeepCollectionEquality().hash(x));
 
 @override
 String toString() {
-  return 'MachineEntity(id: $id, url: $url, item: $item)';
+  return 'MachineEntity(id: $id, url: $url, item: $item, move: $move, x: $x)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $MachineEntityCopyWith<$Res>  {
   factory $MachineEntityCopyWith(MachineEntity value, $Res Function(MachineEntity) _then) = _$MachineEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'url') String? url,@JsonKey(name: 'item') ItemEntity? item
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'url') String? url,@JsonKey(name: 'item') ItemEntity? item,@JsonKey(name: 'move') MoveInfoEntity? move, dynamic x
 });
 
 
-$ItemEntityCopyWith<$Res>? get item;
+$ItemEntityCopyWith<$Res>? get item;$MoveInfoEntityCopyWith<$Res>? get move;
 
 }
 /// @nodoc
@@ -65,12 +65,14 @@ class _$MachineEntityCopyWithImpl<$Res>
 
 /// Create a copy of MachineEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? url = freezed,Object? item = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? url = freezed,Object? item = freezed,Object? move = freezed,Object? x = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,item: freezed == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
-as ItemEntity?,
+as ItemEntity?,move: freezed == move ? _self.move : move // ignore: cast_nullable_to_non_nullable
+as MoveInfoEntity?,x: freezed == x ? _self.x : x // ignore: cast_nullable_to_non_nullable
+as dynamic,
   ));
 }
 /// Create a copy of MachineEntity
@@ -84,6 +86,18 @@ $ItemEntityCopyWith<$Res>? get item {
 
   return $ItemEntityCopyWith<$Res>(_self.item!, (value) {
     return _then(_self.copyWith(item: value));
+  });
+}/// Create a copy of MachineEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoveInfoEntityCopyWith<$Res>? get move {
+    if (_self.move == null) {
+    return null;
+  }
+
+  return $MoveInfoEntityCopyWith<$Res>(_self.move!, (value) {
+    return _then(_self.copyWith(move: value));
   });
 }
 }
@@ -167,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'url')  String? url, @JsonKey(name: 'item')  ItemEntity? item)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'url')  String? url, @JsonKey(name: 'item')  ItemEntity? item, @JsonKey(name: 'move')  MoveInfoEntity? move,  dynamic x)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MachineEntity() when $default != null:
-return $default(_that.id,_that.url,_that.item);case _:
+return $default(_that.id,_that.url,_that.item,_that.move,_that.x);case _:
   return orElse();
 
 }
@@ -188,10 +202,10 @@ return $default(_that.id,_that.url,_that.item);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'url')  String? url, @JsonKey(name: 'item')  ItemEntity? item)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'url')  String? url, @JsonKey(name: 'item')  ItemEntity? item, @JsonKey(name: 'move')  MoveInfoEntity? move,  dynamic x)  $default,) {final _that = this;
 switch (_that) {
 case _MachineEntity():
-return $default(_that.id,_that.url,_that.item);case _:
+return $default(_that.id,_that.url,_that.item,_that.move,_that.x);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +222,10 @@ return $default(_that.id,_that.url,_that.item);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'url')  String? url, @JsonKey(name: 'item')  ItemEntity? item)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'url')  String? url, @JsonKey(name: 'item')  ItemEntity? item, @JsonKey(name: 'move')  MoveInfoEntity? move,  dynamic x)?  $default,) {final _that = this;
 switch (_that) {
 case _MachineEntity() when $default != null:
-return $default(_that.id,_that.url,_that.item);case _:
+return $default(_that.id,_that.url,_that.item,_that.move,_that.x);case _:
   return null;
 
 }
@@ -223,12 +237,14 @@ return $default(_that.id,_that.url,_that.item);case _:
 @JsonSerializable()
 
 class _MachineEntity implements MachineEntity {
-  const _MachineEntity({@JsonKey(name: 'id') this.id, @JsonKey(name: 'url') this.url, @JsonKey(name: 'item') this.item});
+  const _MachineEntity({@JsonKey(name: 'id') this.id, @JsonKey(name: 'url') this.url, @JsonKey(name: 'item') this.item, @JsonKey(name: 'move') this.move, this.x});
   factory _MachineEntity.fromJson(Map<String, dynamic> json) => _$MachineEntityFromJson(json);
 
 @override@JsonKey(name: 'id') final  int? id;
 @override@JsonKey(name: 'url') final  String? url;
 @override@JsonKey(name: 'item') final  ItemEntity? item;
+@override@JsonKey(name: 'move') final  MoveInfoEntity? move;
+@override final  dynamic x;
 
 /// Create a copy of MachineEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +259,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MachineEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.item, item) || other.item == item));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MachineEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.item, item) || other.item == item)&&(identical(other.move, move) || other.move == move)&&const DeepCollectionEquality().equals(other.x, x));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,url,item);
+int get hashCode => Object.hash(runtimeType,id,url,item,move,const DeepCollectionEquality().hash(x));
 
 @override
 String toString() {
-  return 'MachineEntity(id: $id, url: $url, item: $item)';
+  return 'MachineEntity(id: $id, url: $url, item: $item, move: $move, x: $x)';
 }
 
 
@@ -263,11 +279,11 @@ abstract mixin class _$MachineEntityCopyWith<$Res> implements $MachineEntityCopy
   factory _$MachineEntityCopyWith(_MachineEntity value, $Res Function(_MachineEntity) _then) = __$MachineEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'url') String? url,@JsonKey(name: 'item') ItemEntity? item
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'url') String? url,@JsonKey(name: 'item') ItemEntity? item,@JsonKey(name: 'move') MoveInfoEntity? move, dynamic x
 });
 
 
-@override $ItemEntityCopyWith<$Res>? get item;
+@override $ItemEntityCopyWith<$Res>? get item;@override $MoveInfoEntityCopyWith<$Res>? get move;
 
 }
 /// @nodoc
@@ -280,12 +296,14 @@ class __$MachineEntityCopyWithImpl<$Res>
 
 /// Create a copy of MachineEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? url = freezed,Object? item = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? url = freezed,Object? item = freezed,Object? move = freezed,Object? x = freezed,}) {
   return _then(_MachineEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,item: freezed == item ? _self.item : item // ignore: cast_nullable_to_non_nullable
-as ItemEntity?,
+as ItemEntity?,move: freezed == move ? _self.move : move // ignore: cast_nullable_to_non_nullable
+as MoveInfoEntity?,x: freezed == x ? _self.x : x // ignore: cast_nullable_to_non_nullable
+as dynamic,
   ));
 }
 
@@ -300,6 +318,18 @@ $ItemEntityCopyWith<$Res>? get item {
 
   return $ItemEntityCopyWith<$Res>(_self.item!, (value) {
     return _then(_self.copyWith(item: value));
+  });
+}/// Create a copy of MachineEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoveInfoEntityCopyWith<$Res>? get move {
+    if (_self.move == null) {
+    return null;
+  }
+
+  return $MoveInfoEntityCopyWith<$Res>(_self.move!, (value) {
+    return _then(_self.copyWith(move: value));
   });
 }
 }

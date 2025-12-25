@@ -9,12 +9,14 @@ class ExpandableItem extends StatelessWidget {
   final Widget child;
   final bool isExpand;
   final VoidCallback onClick;
+  final String? iconPath;
 
   const ExpandableItem({super.key, 
     required this.title,
     required this.child,
     required this.onClick,
     required this.isExpand,
+    this.iconPath,
   });
 
   @override
@@ -32,12 +34,26 @@ class ExpandableItem extends StatelessWidget {
             Row(
               mainAxisAlignment: .spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: MyTheme.style.title.copyWith(
-                    fontSize: AppSetting.setFontSize(35),
-                    color: MyTheme.color.black,
-                  ),
+                Row(
+                  children: [
+                    if (iconPath != null) ...[
+                      Image.asset(
+                        iconPath!,
+                        width: AppSetting.setWidth(50),
+                        height: AppSetting.setHeight(50),
+                        fit: BoxFit.contain,
+                        color: MyTheme.color.primary,
+                      ),
+                      SizedBox(width: AppSetting.setWidth(20)),
+                    ],
+                    Text(
+                      title,
+                      style: MyTheme.style.title.copyWith(
+                        fontSize: AppSetting.setFontSize(35),
+                        color: MyTheme.color.black,
+                      ),
+                    ),
+                  ],
                 ),
                 IconButton(
                   onPressed: onClick,

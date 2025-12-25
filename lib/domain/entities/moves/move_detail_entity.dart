@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pokedex/domain/entities/machine/machine_entity.dart';
 import 'package:pokedex/domain/entities/moves/move_damage_class_entity.dart';
+import 'package:pokedex/domain/entities/moves/move_machine_entity.dart';
 import 'package:pokedex/domain/entities/type/type_entity.dart';
 
 part 'move_detail_entity.freezed.dart';
@@ -18,7 +19,7 @@ abstract class MoveDetailEntity with _$MoveDetailEntity {
     @JsonKey(name: 'power') int? power,
     @JsonKey(name: 'damage_class') MoveDamageClassEntity? damageClass,
     @JsonKey(name: 'type') TypeEntity? type,
-    @JsonKey(name: 'machines') List<MachineEntity>? machines,
+    @JsonKey(name: 'machines') List<MoveMachineEntity>? machines,
   }) = _MoveDetailEntity;
 
   factory MoveDetailEntity.fromJson(Map<String, dynamic> json) =>

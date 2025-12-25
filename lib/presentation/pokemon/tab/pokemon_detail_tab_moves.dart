@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_table_view/material_table_view.dart';
+import 'package:pokedex/bloc/pokemon/get_pokemon_machine_bloc.dart';
 import 'package:pokedex/bloc/pokemon/get_pokemon_moves_bloc.dart';
 import 'package:pokedex/config/app_config.dart';
+import 'package:pokedex/domain/entities/machine/machine_entity.dart';
 import 'package:pokedex/core/components/expandable/expandable_item.dart';
 import 'package:pokedex/core/components/loading/loading_listview.dart';
 import 'package:pokedex/domain/entities/moves/move_detail_entity.dart';
 import 'package:pokedex/domain/entities/moves/move_entity.dart';
 import 'package:pokedex/extension/string_extension.dart';
+import 'package:pokedex/gen/assets.gen.dart';
 import 'package:pokedex/theme/theme.dart';
 import 'package:pokedex/utils/color/color_utils.dart';
 import 'package:pokedex/utils/helper/helper_utils.dart';
@@ -33,7 +36,8 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
   }
 
   List<MoveEntity> getMovesByName(String name) {
-    final filteredMoves = widget.move
+    final filteredMoves =
+        widget.move
             ?.where(
               (move) =>
                   move.versionGroupDetails?.any(
@@ -43,7 +47,7 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
             )
             .toList() ??
         [];
-    
+
     // Sort by level for "level-up" moves
     if (name == "level-up") {
       filteredMoves.sort((a, b) {
@@ -52,7 +56,7 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
         return levelA.compareTo(levelB);
       });
     }
-    
+
     return filteredMoves;
   }
 
@@ -62,7 +66,8 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
       crossAxisAlignment: .start,
       children: [
         ExpandableItem(
-          title: "Moves learn by level up",
+          title: "Moves learn by Level Up",
+          iconPath: Assets.icons.pokemonsTypes.normal.path,
           onClick: () => onChangeIndex(0),
           isExpand: selectedIndex == 0,
           child: _MoveSections(
@@ -72,6 +77,7 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
         ),
         ExpandableItem(
           title: "Moves learn by Technical Machines",
+          iconPath: Assets.icons.pokemonsTypes.steel.path,
           onClick: () => onChangeIndex(1),
           isExpand: selectedIndex == 1,
           child: _MoveSections(
@@ -80,19 +86,22 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
           ),
         ),
         ExpandableItem(
-          title: "Moves learn by breeding",
+          title: "Moves learn by Breeding",
+          iconPath: Assets.icons.pokemonsTypes.fairy.path,
           onClick: () => onChangeIndex(2),
           isExpand: selectedIndex == 2,
           child: _MoveSections(moves: getMovesByName("egg"), type: "egg"),
         ),
         ExpandableItem(
           title: "Moves learn from Move Tutor",
+          iconPath: Assets.icons.pokemonsTypes.psychic.path,
           onClick: () => onChangeIndex(3),
           isExpand: selectedIndex == 3,
           child: _MoveSections(moves: getMovesByName("tutor"), type: "tutor"),
         ),
         ExpandableItem(
-          title: "Moves learn by form change",
+          title: "Moves learn by Form Change",
+          iconPath: Assets.icons.pokemonsTypes.ghost.path,
           onClick: () => onChangeIndex(4),
           isExpand: selectedIndex == 4,
           child: _MoveSections(
@@ -117,6 +126,8 @@ class _MoveSections extends StatefulWidget {
 
 class _MoveSectionsState extends State<_MoveSections> {
   List<({MoveEntity move, MoveDetailEntity detail})>? combinedMoves;
+  Map<String, MachineEntity>? machinesMap; // Map moveId -> full MachineEntity
+
   String _mapColumnHeaderLevel(int index) {
     switch (index) {
       case 0:
@@ -201,7 +212,10 @@ class _MoveSectionsState extends State<_MoveSections> {
             ? move.versionGroupDetails!.first.levelLearnedAt.toString()
             : "-";
       case 1:
-        return move.move?.name?.replaceAll("-", " ").capitalizeMultipleWords() ?? "";
+        return move.move?.name
+                ?.replaceAll("-", " ")
+                .capitalizeMultipleWords() ??
+            "";
       case 2:
         return moveDetail.type?.name ?? "";
       case 3:
@@ -222,9 +236,22 @@ class _MoveSectionsState extends State<_MoveSections> {
   ) {
     switch (column) {
       case 0:
-        return "TM";
+
+        /// Get machine name from machinesMap using moveId
+        final moveId = HelperUtils.instance.parseUrlId(move.move?.url ?? "");
+        final machine = machinesMap?[moveId];
+
+        /// If machine not found, show loading
+        if (machine == null) {
+          return "Loading...";
+        }
+
+        return machine.item?.name?.toUpperCase().replaceAll("-", "") ?? "TM";
       case 1:
-        return move.move?.name?.replaceAll("-", " ").capitalizeMultipleWords() ?? "";
+        return move.move?.name
+                ?.replaceAll("-", " ")
+                .capitalizeMultipleWords() ??
+            "";
       case 2:
         return moveDetail.type?.name ?? "";
       case 3:
@@ -245,7 +272,10 @@ class _MoveSectionsState extends State<_MoveSections> {
   ) {
     switch (column) {
       case 0:
-        return move.move?.name?.replaceAll("-", " ").capitalizeMultipleWords() ?? "";
+        return move.move?.name
+                ?.replaceAll("-", " ")
+                .capitalizeMultipleWords() ??
+            "";
       case 1:
         return moveDetail.type?.name ?? "";
       case 2:
@@ -284,6 +314,8 @@ class _MoveSectionsState extends State<_MoveSections> {
     final List<String> moveIds = widget.moves
         .map((e) => HelperUtils.instance.parseUrlId(e.move?.url ?? ""))
         .toList();
+
+    /// Fetch move details (machines data is already included in move detail)
     context.read<GetPokemonMovesBloc>().getPokemonMoves(moveIds);
   }
 
@@ -295,21 +327,43 @@ class _MoveSectionsState extends State<_MoveSections> {
     if (widget.type == "level-up" || widget.type == "machine") {
       /// Lv/TM | Move | Type | Cat | Power | Acc
       return [
-        TableColumn(width: tableWidth * 0.12), /// Lv/TM - smaller
-        TableColumn(width: tableWidth * 0.26), /// Move name - reduced
-        TableColumn(width: tableWidth * 0.12), /// Type
-        TableColumn(width: tableWidth * 0.16), /// Category
-        TableColumn(width: tableWidth * 0.14), /// Power
-        TableColumn(width: tableWidth * 0.14), /// Accuracy
+        TableColumn(width: tableWidth * 0.14),
+
+        /// Lv/TM - smaller
+        TableColumn(width: tableWidth * 0.26),
+
+        /// Move name - reduced
+        TableColumn(width: tableWidth * 0.12),
+
+        /// Type
+        TableColumn(width: tableWidth * 0.16),
+
+        /// Category
+        TableColumn(width: tableWidth * 0.14),
+
+        /// Power
+        TableColumn(width: tableWidth * 0.14),
+
+        /// Accuracy
       ];
     } else {
       /// Move | Type | Cat | Power | Acc
       return [
-        TableColumn(width: tableWidth * 0.30), /// Move name - reduced
-        TableColumn(width: tableWidth * 0.18), /// Type
-        TableColumn(width: tableWidth * 0.20), /// Category
-        TableColumn(width: tableWidth * 0.16), /// Power
-        TableColumn(width: tableWidth * 0.16), /// Accuracy
+        TableColumn(width: tableWidth * 0.30),
+
+        /// Move name - reduced
+        TableColumn(width: tableWidth * 0.18),
+
+        /// Type
+        TableColumn(width: tableWidth * 0.20),
+
+        /// Category
+        TableColumn(width: tableWidth * 0.16),
+
+        /// Power
+        TableColumn(width: tableWidth * 0.16),
+
+        /// Accuracy
       ];
     }
   }
@@ -328,180 +382,265 @@ class _MoveSectionsState extends State<_MoveSections> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GetPokemonMovesBloc, GetPokemonMovesState>(
-      listener: (context, state) {
-        state.maybeWhen(
-          orElse: () {},
-          loaded: (loadedMoves) {
-            combinedMoves = [];
-            /// Create a map for quick lookup of move details by ID
-            final moveDetailsMap = <String, MoveDetailEntity>{};
-            for (var detail in loadedMoves) {
-              if (detail.id != null) {
-                moveDetailsMap[detail.id.toString()] = detail;
-              }
-            }
-            for (var move in widget.moves) {
-              final moveId = HelperUtils.instance.parseUrlId(move.move?.url ?? "");
-              final moveDetail = moveDetailsMap[moveId];
-              /// Only add if we have the detail data
-              if (moveDetail != null && moveDetail.id != null) {
-                combinedMoves?.add((move: move, detail: moveDetail));
-              }
-            }
-            setState(() {});
-          }
-        );
-      },
-      builder: (context, state) {
-        return state.maybeWhen(
-          orElse: () {
-            if (combinedMoves == null) {
-              return const LoadingListView();
-            }
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<GetPokemonMovesBloc, GetPokemonMovesState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              loaded: (loadedMoves) {
+                combinedMoves = [];
 
-            if (combinedMoves!.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(AppSetting.setWidth(40)),
-                  child: Text(
-                    'No moves for this category',
-                    style: MyTheme.style.subtitle.copyWith(
-                      color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
-                      fontSize: AppSetting.setFontSize(30),
-                    ),
-                  ),
-                ),
-              );
-            }
+                /// Create a map for quick lookup of move details by ID
+                final moveDetailsMap = <String, MoveDetailEntity>{};
+                for (var detail in loadedMoves) {
+                  if (detail.id != null) {
+                    moveDetailsMap[detail.id.toString()] = detail;
+                  }
+                }
+                for (var move in widget.moves) {
+                  final moveId = HelperUtils.instance.parseUrlId(
+                    move.move?.url ?? "",
+                  );
+                  final moveDetail = moveDetailsMap[moveId];
 
-            return TableView.builder(
-              physics: const BouncingScrollPhysics(),
-              shrinkWrapVertical: true,
-              columns: getTableColumn(),
-              rowCount: combinedMoves!.length + 1, /// +1 for header
-              rowHeight: AppSetting.setHeight(90),
-              rowBuilder: (context, row, contentBuilder) {
-                return Material(
-                  type: MaterialType.transparency,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: row == 0
-                          ? MyTheme.color.primary
-                          : (row % 2 == 0 
-                              ? MyTheme.color.containerColor 
-                              : MyTheme.color.containerColor.withValues(alpha: 0.5)),
-                      borderRadius: row == 0 
-                          ? BorderRadius.only(
-                              topLeft: Radius.circular(AppSetting.setWidth(24)),
-                              topRight: Radius.circular(AppSetting.setWidth(24)),
-                            )
-                          : null,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: AppSetting.isDark
-                              ? MyTheme.color.white.withValues(alpha: 0.05)
-                              : Colors.grey[300]!,
-                          width: 0.5,
-                        ),
-                      ),
-                    ),
-                    child: contentBuilder(context, (context, column) {
-                      /// Header row
-                      if (row == 0) {
-                        return Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSetting.setWidth(20),
-                            vertical: AppSetting.setHeight(15),
-                          ),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            mapColumnHeader(column),
-                            style: MyTheme.style.title.copyWith(
-                              color: MyTheme.color.white,
-                              fontSize: AppSetting.setFontSize(28),
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
+                  /// Only add if we have the detail data
+                  if (moveDetail != null && moveDetail.id != null) {
+                    combinedMoves?.add((move: move, detail: moveDetail));
+                  }
+                }
+
+                /// For machine type, fetch machine details
+                if (widget.type == "machine" &&
+                    combinedMoves != null &&
+                    combinedMoves!.isNotEmpty) {
+                  /// Collect all machine IDs from move details
+                  final Set<int> machineIds = {};
+                  for (var combined in combinedMoves!) {
+                    final machines = combined.detail.machines;
+                    if (machines != null && machines.isNotEmpty) {
+                      /// Get first machine's ID from URL
+                      final machineUrl = machines.first.machine?.url;
+                      if (machineUrl != null) {
+                        final machineId = int.tryParse(
+                          HelperUtils.instance.parseUrlId(machineUrl),
                         );
-                      }
-                      /// Data rows
-                      else {
-                        final dataIndex = row - 1;
-                        
-                        if (dataIndex < combinedMoves!.length) {
-                          final combinedData = combinedMoves![dataIndex];
-                          final move = combinedData.move;
-                          final moveDetail = combinedData.detail;
-                          
-                          String text = mapValueText(
-                            move,
-                            moveDetail,
-                            column,
-                          );
-                          if (column == (widget.type == "level-up" || widget.type == "machine" ? 2 : 1)) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSetting.setWidth(8),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ColorUtils.instance.mapTypeColor(text),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: ColorUtils.instance.mapTypeColor(text).withValues(alpha: 0.3),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                padding: EdgeInsets.all(AppSetting.setWidth(18)),
-                                child: Image.asset(
-                                  IconUtils.instance.mapIconType(text),
-                                  width: AppSetting.setWidth(42),
-                                  height: AppSetting.setHeight(42),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            );
-                          } else {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSetting.setWidth(20),
-                                vertical: AppSetting.setHeight(12),
-                              ),
-                              alignment: column == 0 || column == 1 
-                                  ? Alignment.centerLeft 
-                                  : Alignment.center,
-                              child: Text(
-                                text,
-                                style: MyTheme.style.subtitle.copyWith(
-                                  color: MyTheme.color.blackWhite,
-                                  fontSize: AppSetting.setFontSize(28),
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.2,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            );
-                          }
+                        if (machineId != null) {
+                          machineIds.add(machineId);
                         }
                       }
+                    }
+                  }
 
-                      return Container();
-                    }),
-                  ),
-                );
+                  if (machineIds.isNotEmpty) {
+                    context.read<GetPokemonMachineBloc>().getMachines(
+                      machineIds.toList(),
+                    );
+                  }
+                }
+
+                setState(() {});
               },
             );
           },
-          loading: () => const LoadingListView(),
-        );
-      },
+        ),
+        BlocListener<GetPokemonMachineBloc, GetPokemonMachineState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              orElse: () {},
+              loaded: (loadedMachines) {
+                machinesMap = {};
+                // Create map: moveId -> full MachineEntity
+                for (var machine in loadedMachines) {
+                  if (machine.move?.url != null) {
+                    final moveId = HelperUtils.instance.parseUrlId(
+                      machine.move!.url!,
+                    );
+                    machinesMap![moveId] = machine;
+                  }
+                }
+                setState(() {});
+              },
+            );
+          },
+        ),
+      ],
+      child: BlocBuilder<GetPokemonMovesBloc, GetPokemonMovesState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            orElse: () {
+              /// For machine type, wait for both moves and machines
+              if (widget.type == "machine") {
+                if (combinedMoves == null || machinesMap == null) {
+                  return const LoadingListView();
+                }
+              } else {
+                if (combinedMoves == null) {
+                  return const LoadingListView();
+                }
+              }
+
+              if (combinedMoves!.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppSetting.setWidth(40)),
+                    child: Text(
+                      'No moves for this category',
+                      style: MyTheme.style.subtitle.copyWith(
+                        color: MyTheme.color.blackWhite.withValues(alpha: 0.6),
+                        fontSize: AppSetting.setFontSize(30),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return TableView.builder(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrapVertical: true,
+                columns: getTableColumn(),
+                rowCount: combinedMoves!.length + 1,
+
+                /// +1 for header
+                rowHeight: AppSetting.setHeight(90),
+                rowBuilder: (context, row, contentBuilder) {
+                  return Material(
+                    type: MaterialType.transparency,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: row == 0
+                            ? MyTheme.color.primary
+                            : (row % 2 == 0
+                                  ? MyTheme.color.containerColor
+                                  : MyTheme.color.containerColor.withValues(
+                                      alpha: 0.5,
+                                    )),
+                        borderRadius: row == 0
+                            ? BorderRadius.only(
+                                topLeft: Radius.circular(
+                                  AppSetting.setWidth(24),
+                                ),
+                                topRight: Radius.circular(
+                                  AppSetting.setWidth(24),
+                                ),
+                              )
+                            : null,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: AppSetting.isDark
+                                ? MyTheme.color.white.withValues(alpha: 0.05)
+                                : Colors.grey[300]!,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      child: contentBuilder(context, (context, column) {
+                        /// Header row
+                        if (row == 0) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSetting.setWidth(20),
+                              vertical: AppSetting.setHeight(15),
+                            ),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              mapColumnHeader(column),
+                              style: MyTheme.style.title.copyWith(
+                                color: MyTheme.color.white,
+                                fontSize: AppSetting.setFontSize(28),
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          );
+                        }
+                        /// Data rows
+                        else {
+                          final dataIndex = row - 1;
+
+                          if (dataIndex < combinedMoves!.length) {
+                            final combinedData = combinedMoves![dataIndex];
+                            final move = combinedData.move;
+                            final moveDetail = combinedData.detail;
+
+                            String text = mapValueText(
+                              move,
+                              moveDetail,
+                              column,
+                            );
+                            if (column ==
+                                (widget.type == "level-up" ||
+                                        widget.type == "machine"
+                                    ? 2
+                                    : 1)) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSetting.setWidth(8),
+                                ),
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: ColorUtils.instance.mapTypeColor(
+                                      text,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: ColorUtils.instance
+                                            .mapTypeColor(text)
+                                            .withValues(alpha: 0.3),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: EdgeInsets.all(
+                                    AppSetting.setWidth(18),
+                                  ),
+                                  child: Image.asset(
+                                    IconUtils.instance.mapIconType(text),
+                                    width: AppSetting.setWidth(42),
+                                    height: AppSetting.setHeight(42),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSetting.setWidth(20),
+                                  vertical: AppSetting.setHeight(12),
+                                ),
+                                alignment: column == 0 || column == 1
+                                    ? Alignment.centerLeft
+                                    : Alignment.center,
+                                child: Text(
+                                  text,
+                                  style: MyTheme.style.subtitle.copyWith(
+                                    color: MyTheme.color.blackWhite,
+                                    fontSize: AppSetting.setFontSize(28),
+                                    fontWeight: FontWeight.w500,
+                                    height: 1.2,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }
+                          }
+                        }
+
+                        return Container();
+                      }),
+                    ),
+                  );
+                },
+              );
+            },
+            loading: () => const LoadingListView(),
+          );
+        },
+      ),
     );
   }
 }

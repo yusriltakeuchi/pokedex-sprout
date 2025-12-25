@@ -23,7 +23,7 @@ _MoveDetailEntity _$MoveDetailEntityFromJson(Map<String, dynamic> json) =>
           ? null
           : TypeEntity.fromJson(json['type'] as Map<String, dynamic>),
       machines: (json['machines'] as List<dynamic>?)
-          ?.map((e) => MachineEntity.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => MoveMachineEntity.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

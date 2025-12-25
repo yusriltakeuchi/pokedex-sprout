@@ -16,6 +16,7 @@ class PokemonItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = pokemon.types?.first.type?.color ?? Colors.grey;
+    bool isPortrait = AppSetting.isPortrait(context);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(borderRadius: .circular(20), color: color),
@@ -26,7 +27,7 @@ class PokemonItem extends StatelessWidget {
           children: [
             Padding(
               padding: .symmetric(
-                vertical: AppSetting.setHeight(60),
+                vertical: AppSetting.setHeight(isPortrait ? 60 : 40),
                 horizontal: AppSetting.setWidth(40),
               ),
               child: Row(
@@ -80,11 +81,21 @@ class PokemonItem extends StatelessWidget {
               child: pokemon.sprites?.other?.home?.frontDefault != null
                   ? Hero(
                       tag: "pokemon_image_${pokemon.id}",
-                      child: ImageCaching(
-                        imageUrl: pokemon.sprites?.other?.home?.frontDefault ?? "",
-                        width: AppSetting.setWidth(260),
-                        height: AppSetting.setHeight(260),
-                        fit: BoxFit.contain,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final imageSize = isPortrait
+                              ? 260.0
+                              : 200.0;
+
+                          return ImageCaching(
+                            imageUrl:
+                                pokemon.sprites?.other?.home?.frontDefault ??
+                                "",
+                            width: AppSetting.setWidth(imageSize),
+                            height: AppSetting.setHeight(imageSize),
+                            fit: BoxFit.contain,
+                          );
+                        },
                       ),
                     )
                   : SizedBox(

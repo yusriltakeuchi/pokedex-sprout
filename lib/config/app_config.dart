@@ -22,6 +22,8 @@ class AppSetting {
   /// ------------
   static double get deviceWidth => ScreenUtil().screenWidth;
   static double get deviceHeight => ScreenUtil().screenHeight;
+  static bool isPortrait(BuildContext context) => MediaQuery.of(context).orientation == Orientation.portrait ? true : false;
+  static bool isLandscape(BuildContext context) => MediaQuery.of(context).orientation == Orientation.landscape ? true : false;
 
   static bool isLargePhone(BuildContext context) => MediaQuery.of(context).size.width > 600 ? true : false;
   static bool isNormalPhone(BuildContext context) => MediaQuery.of(context).size.width > 400 && MediaQuery.of(context).size.width < 600 ? true : false;

@@ -215,7 +215,14 @@ class _PokemonSections extends StatelessWidget {
               BaseFilterDTO(limit: 20, offset: 0),
             ),
           ),
-          loading: () => LoadingGrid(crossAxis: 2, height: 300, length: 8),
+          loading: () {
+            final crossAxisCount = AppSetting.isPortrait(context) ? 2 : 4;
+            return LoadingGrid(
+              crossAxis: crossAxisCount, 
+              height: 300, 
+              length: crossAxisCount * 4,
+            );
+          },
           loaded: (pokemons, offset, limit, hasReachedMax, onLoadMore) {
             if (pokemons.isEmpty) {
               return IdleNoItemCenter(
@@ -228,11 +235,13 @@ class _PokemonSections extends StatelessWidget {
                 ),
               );
             }
+
+            final crossAxisCount = AppSetting.isPortrait(context) ? 2 : 4;
             return Column(
               crossAxisAlignment: .start,
               children: [
                 AlignedGridView.count(
-                  crossAxisCount: 2,
+                  crossAxisCount: crossAxisCount,
                   padding: const EdgeInsets.all(0),
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: pokemons.length,
@@ -255,7 +264,11 @@ class _PokemonSections extends StatelessWidget {
                       top: AppSetting.setHeight(40),
                       bottom: AppSetting.setHeight(20),
                     ),
-                    child: LoadingGrid(crossAxis: 2, height: 300, length: 4),
+                    child: LoadingGrid(
+                      crossAxis: crossAxisCount, 
+                      height: 300, 
+                      length: crossAxisCount * 2,
+                    ),
                   ),
               ],
             );
@@ -271,9 +284,11 @@ class _BackgroundHeaderColor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final heightPercentage = AppSetting.isPortrait(context) ? 0.2 : 0.35;
+    
     return Container(
       width: double.infinity,
-      height: AppSetting.deviceHeight * 0.2,
+      height: AppSetting.deviceHeight * heightPercentage,
       color: MyTheme.color.primary,
     );
   }

@@ -14,7 +14,7 @@ class IconUtils {
     // LucideIcons.
     switch (name.toLowerCase()) {
       case 'normal':
-        return Assets.icons.pokemonsTypes.fighting.path;
+        return Assets.icons.pokemonsTypes.normal.path;
       case 'fighting':
         return Assets.icons.pokemonsTypes.fighting.path;
       case 'flying':

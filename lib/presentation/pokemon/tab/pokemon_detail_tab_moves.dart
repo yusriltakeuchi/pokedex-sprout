@@ -62,7 +62,7 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
       crossAxisAlignment: .start,
       children: [
         ExpandableItem(
-          title: "Moves learnt by level up",
+          title: "Moves learn by level up",
           onClick: () => onChangeIndex(0),
           isExpand: selectedIndex == 0,
           child: _MoveSections(
@@ -71,7 +71,7 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
           ),
         ),
         ExpandableItem(
-          title: "Moves learnt by Technical Machines",
+          title: "Moves learn by Technical Machines",
           onClick: () => onChangeIndex(1),
           isExpand: selectedIndex == 1,
           child: _MoveSections(
@@ -80,19 +80,19 @@ class _PokemonDetailTabBaseMovesState extends State<PokemonDetailTabBaseMoves> {
           ),
         ),
         ExpandableItem(
-          title: "Moves learnt by breeding",
+          title: "Moves learn by breeding",
           onClick: () => onChangeIndex(2),
           isExpand: selectedIndex == 2,
           child: _MoveSections(moves: getMovesByName("egg"), type: "egg"),
         ),
         ExpandableItem(
-          title: "Moves learnt from Move Tutor",
+          title: "Moves learn from Move Tutor",
           onClick: () => onChangeIndex(3),
           isExpand: selectedIndex == 3,
           child: _MoveSections(moves: getMovesByName("tutor"), type: "tutor"),
         ),
         ExpandableItem(
-          title: "Moves learnt by form change",
+          title: "Moves learn by form change",
           onClick: () => onChangeIndex(4),
           isExpand: selectedIndex == 4,
           child: _MoveSections(
@@ -288,48 +288,27 @@ class _MoveSectionsState extends State<_MoveSections> {
 
   List<TableColumn> getTableColumn() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final padding = AppSetting.setWidth(40);
+    final padding = AppSetting.setWidth(30);
     final tableWidth = screenWidth - (padding * 2);
-    final columnWidth = tableWidth / 5;
 
     if (widget.type == "level-up" || widget.type == "machine") {
+      // Lv/TM | Move | Type | Cat | Power | Acc
       return [
-        TableColumn(
-          width: columnWidth,
-        ),
-        TableColumn(
-          width: columnWidth + 80,
-        ),
-        TableColumn(
-          width: columnWidth,
-        ),
-        TableColumn(
-          width: columnWidth + 20,
-        ),
-        TableColumn(
-          width: columnWidth,
-        ),
-        TableColumn(
-          width: columnWidth,
-        ),
+        TableColumn(width: tableWidth * 0.12), // Lv/TM - smaller
+        TableColumn(width: tableWidth * 0.26), // Move name - reduced
+        TableColumn(width: tableWidth * 0.12), // Type
+        TableColumn(width: tableWidth * 0.16), // Category
+        TableColumn(width: tableWidth * 0.14), // Power
+        TableColumn(width: tableWidth * 0.14), // Accuracy
       ];
     } else {
+      // Move | Type | Cat | Power | Acc
       return [
-        TableColumn(
-          width: columnWidth + 80,
-        ),
-        TableColumn(
-          width: columnWidth,
-        ),
-        TableColumn(
-          width: columnWidth + 20,
-        ),
-        TableColumn(
-          width: columnWidth,
-        ),
-        TableColumn(
-          width: columnWidth,
-        ),
+        TableColumn(width: tableWidth * 0.30), // Move name - reduced
+        TableColumn(width: tableWidth * 0.18), // Type
+        TableColumn(width: tableWidth * 0.20), // Category
+        TableColumn(width: tableWidth * 0.16), // Power
+        TableColumn(width: tableWidth * 0.16), // Accuracy
       ];
     }
   }
@@ -349,15 +328,56 @@ class _MoveSectionsState extends State<_MoveSections> {
         return state.maybeWhen(
           orElse: () => const LoadingListView(),
           loading: () => const LoadingListView(),
-          loaded: (moves) {
+          loaded: (loadedMoves) {
+            // Validasi: pastikan bloc sudah selesai fetch semua moves
+            // Jika loadedMoves kosong, berarti masih loading atau semua gagal
+            if (loadedMoves.isEmpty) {
+              return const LoadingListView();
+            }
+            
+            // Create a map for quick lookup of move details by ID
+            final moveDetailsMap = <String, MoveDetailEntity>{};
+            for (var detail in loadedMoves) {
+              if (detail.id != null) {
+                moveDetailsMap[detail.id.toString()] = detail;
+              }
+            }
+            
+            // Combine widget.moves with their corresponding details
+            // Only include moves that have successfully loaded details
+            final List<({MoveEntity move, MoveDetailEntity detail})> combinedMoves = [];
+            
+            for (var move in widget.moves) {
+              final moveId = HelperUtils.instance.parseUrlId(move.move?.url ?? "");
+              final moveDetail = moveDetailsMap[moveId];
+              
+              // Only add if we have the detail data
+              if (moveDetail != null && moveDetail.id != null) {
+                combinedMoves.add((move: move, detail: moveDetail));
+              }
+            }
+            
+            // If no moves loaded successfully after processing, show empty state
+            if (combinedMoves.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSetting.setWidth(40)),
+                  child: Text(
+                    'No moves available',
+                    style: MyTheme.style.subtitle.copyWith(
+                      color: MyTheme.color.blackWhite,
+                    ),
+                  ),
+                ),
+              );
+            }
+            
             return TableView.builder(
               physics: const BouncingScrollPhysics(),
               shrinkWrapVertical: true,
               columns: getTableColumn(),
-              rowCount: widget.moves.length + 1,
-
-              /// +1 untuk header
-              rowHeight: AppSetting.setHeight(130),
+              rowCount: combinedMoves.length + 1, /// +1 untuk header
+              rowHeight: AppSetting.setHeight(90), // Reduced from 130 for compact view
               rowBuilder: (context, row, contentBuilder) {
                 return Material(
                   type: MaterialType.transparency,
@@ -365,13 +385,21 @@ class _MoveSectionsState extends State<_MoveSections> {
                     decoration: BoxDecoration(
                       color: row == 0
                           ? MyTheme.color.primary
-                          : MyTheme.color.containerColor,
+                          : (row % 2 == 0 
+                              ? MyTheme.color.containerColor 
+                              : MyTheme.color.containerColor.withValues(alpha: 0.5)),
+                      borderRadius: row == 0 
+                          ? BorderRadius.only(
+                              topLeft: Radius.circular(AppSetting.setWidth(24)),
+                              topRight: Radius.circular(AppSetting.setWidth(24)),
+                            )
+                          : null,
                       border: Border(
                         bottom: BorderSide(
                           color: AppSetting.isDark
-                              ? MyTheme.color.white.withValues(alpha: 0.1)
-                              : Colors.grey[200]!,
-                          width: 1,
+                              ? MyTheme.color.white.withValues(alpha: 0.05)
+                              : Colors.grey[300]!,
+                          width: 0.5,
                         ),
                       ),
                     ),
@@ -380,16 +408,17 @@ class _MoveSectionsState extends State<_MoveSections> {
                       if (row == 0) {
                         return Container(
                           padding: EdgeInsets.symmetric(
-                            horizontal: AppSetting.setWidth(40),
-                            vertical: AppSetting.setHeight(20),
+                            horizontal: AppSetting.setWidth(20),
+                            vertical: AppSetting.setHeight(15),
                           ),
                           alignment: Alignment.centerLeft,
                           child: Text(
                             mapColumnHeader(column),
                             style: MyTheme.style.title.copyWith(
                               color: MyTheme.color.white,
-                              fontSize: AppSetting.setFontSize(35),
-                              fontWeight: FontWeight.bold,
+                              fontSize: AppSetting.setFontSize(28),
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         );
@@ -398,63 +427,64 @@ class _MoveSectionsState extends State<_MoveSections> {
                       else {
                         final dataIndex = row - 1;
                         
-                        if (dataIndex < widget.moves.length) {
-                          final move = widget.moves[dataIndex];
+                        if (dataIndex < combinedMoves.length) {
+                          final combinedData = combinedMoves[dataIndex];
+                          final move = combinedData.move;
+                          final moveDetail = combinedData.detail;
                           
-                          // Find the corresponding move detail by matching move name/url
-                          final moveId = HelperUtils.instance.parseUrlId(move.move?.url ?? "");
-                          final moveDetail = moves.firstWhere(
-                            (detail) => detail.id.toString() == moveId,
-                            orElse: () {
-                              return MoveDetailEntity();
-                            },
-                          );
                           String text = mapValueText(
                             move,
                             moveDetail,
                             column,
                           );
                           if (column == (widget.type == "level-up" || widget.type == "machine" ? 2 : 1)) {
-                            /// IMAGE TYPE column
-                            return FittedBox(
+                            /// IMAGE TYPE column - Modern compact design
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSetting.setWidth(8),
+                              ),
+                              alignment: Alignment.centerLeft,
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: ColorUtils.instance.mapTypeColor(text),
-                                ),
-                                margin: .symmetric(
-                                  horizontal: AppSetting.setWidth(10),
-                                  vertical: AppSetting.setHeight(10),
-                                ),
-                                alignment: Alignment.centerLeft,
-                                child: Center(
-                                  child: Padding(
-                                    padding: .symmetric(
-                                      horizontal: AppSetting.setWidth(30),
-                                      vertical: AppSetting.setHeight(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: ColorUtils.instance.mapTypeColor(text).withValues(alpha: 0.3),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
                                     ),
-                                    child: Image.asset(
-                                      IconUtils.instance.mapIconType(text),
-                                      width: AppSetting.setWidth(60),
-                                      height: AppSetting.setHeight(60),
-                                    ),
-                                  ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.all(AppSetting.setWidth(18)),
+                                child: Image.asset(
+                                  IconUtils.instance.mapIconType(text),
+                                  width: AppSetting.setWidth(42),
+                                  height: AppSetting.setHeight(42),
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             );
                           } else {
-                            /// OTHER COLUMNS
+                            /// OTHER COLUMNS - Compact and readable
                             return Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: AppSetting.setWidth(40),
-                                vertical: AppSetting.setHeight(20),
+                                horizontal: AppSetting.setWidth(20),
+                                vertical: AppSetting.setHeight(12),
                               ),
+                              alignment: column == 0 || column == 1 
+                                  ? Alignment.centerLeft 
+                                  : Alignment.center,
                               child: Text(
                                 text,
                                 style: MyTheme.style.subtitle.copyWith(
                                   color: MyTheme.color.blackWhite,
-                                  fontSize: AppSetting.setFontSize(35),
+                                  fontSize: AppSetting.setFontSize(28),
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.2,
                                 ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             );
                           }

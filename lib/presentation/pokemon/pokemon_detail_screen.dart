@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex/bloc/evolution/evolution_chain_bloc.dart';
 import 'package:pokedex/bloc/pokemon/get_pokemon_machine_bloc.dart';
-import 'package:pokedex/bloc/pokemon/get_pokemon_machine_bloc.dart';
 import 'package:pokedex/bloc/pokemon/get_pokemon_moves_bloc.dart';
 import 'package:pokedex/bloc/species/get_species_bloc.dart';
 import 'package:pokedex/bloc/type/get_type_defenses_bloc.dart';
@@ -136,26 +135,222 @@ class _ContentSectionState extends State<_ContentSection> {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = AppSetting.isPortrait(context);
+
     return SafeArea(
       bottom: false,
+      child: isPortrait ? _buildPortraitLayout() : _buildLandscapeLayout(),
+    );
+  }
+
+  Widget _buildPortraitLayout() {
+    return Column(
+      crossAxisAlignment: .start,
+      children: [
+        Space.w(100),
+        _appBarSection(context),
+        Space.h(40),
+        _pokemonInfo(),
+        _pokemonDetailPortrait(),
+      ],
+    );
+  }
+
+  Widget _buildLandscapeLayout() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final minHeight = AppSetting.deviceHeight;
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Space.h(20),
+              _appBarSection(context),
+              Space.h(20),
+              ConstrainedBox(
+                constraints: BoxConstraints(minHeight: minHeight),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// Left side - Pokemon image and info
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                        children: [
+                          Hero(
+                            tag: 'pokemon_image_${widget.pokemon.id}',
+                            child: ImageCaching(
+                              imageUrl:
+                                  widget
+                                      .pokemon
+                                      .sprites
+                                      ?.other
+                                      ?.home
+                                      ?.frontDefault ??
+                                  "",
+                              width: AppSetting.setWidth(500),
+                              height: AppSetting.setHeight(500),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          Space.h(20),
+                          _pokemonInfoLandscape(),
+                          Space.h(40),
+                        ],
+                      ),
+                    ),
+                    /// Right side - Tabs and content (full height)
+                    Expanded(
+                      flex: 6,
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: minHeight),
+                        margin: EdgeInsets.only(right: AppSetting.setWidth(20)),
+                        decoration: BoxDecoration(
+                          color: MyTheme.color.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(AppSetting.setWidth(30)),
+                            bottomLeft: Radius.circular(
+                              AppSetting.setWidth(30),
+                            ),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSetting.setWidth(40),
+                          vertical: AppSetting.setHeight(30),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(tabs.length, (index) {
+                                  final tabTitle = tabs[index];
+                                  final isSelected = index == selectedTabIndex;
+                                  return Padding(
+                                    padding: .only(
+                                      left: index == 0
+                                          ? 0
+                                          : AppSetting.setWidth(20),
+                                    ),
+                                    child: _TabItem(
+                                      title: tabTitle,
+                                      isSelected: isSelected,
+                                      onClick: () => onTabSelected(index),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                            Space.h(20),
+                            SizedBox(
+                              height: minHeight - AppSetting.setHeight(150),
+                              child: PageView(
+                                controller: _pageController,
+                                onPageChanged: onPageChanged,
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Padding(
+                                      padding: .only(
+                                        top: AppSetting.setHeight(20),
+                                      ),
+                                      child: PokemonDetailTabAbout(
+                                        pokemon: widget.pokemon,
+                                      ),
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    child: Padding(
+                                      padding: .only(
+                                        top: AppSetting.setHeight(20),
+                                      ),
+                                      child: PokemonDetailTabBaseStat(
+                                        stats: widget.pokemon.stats ?? [],
+                                      ),
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    child: Padding(
+                                      padding: .only(
+                                        top: AppSetting.setHeight(20),
+                                      ),
+                                      child: PokemonDetailTabBaseEvolution(),
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    child: Padding(
+                                      padding: .only(
+                                        top: AppSetting.setHeight(20),
+                                      ),
+                                      child: PokemonDetailTabBaseMoves(
+                                        move: widget.pokemon.moves,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _pokemonInfoLandscape() {
+    return Padding(
+      padding: .symmetric(horizontal: AppSetting.setWidth(40)),
       child: Column(
-        crossAxisAlignment: .start,
         children: [
-          Space.w(100),
-          _appBarSection(context),
-          Space.h(40),
-          _pokemonInfo(),
-          _pokemonDetail(),
+          Text(
+            widget.pokemon.name?.capitalizeMultipleWords() ?? "Unknown",
+            style: MyTheme.style.title.copyWith(
+              fontSize: AppSetting.setFontSize(50),
+              color: MyTheme.color.white,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Space.h(10),
+          Text(
+            "#${widget.pokemon.id.toString().padLeft(4, '0')}",
+            style: MyTheme.style.subtitle.copyWith(
+              fontSize: AppSetting.setFontSize(35),
+              color: MyTheme.color.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Space.h(15),
+          Wrap(
+            spacing: AppSetting.setWidth(15),
+            runSpacing: AppSetting.setHeight(10),
+            alignment: WrapAlignment.center,
+            children: List.generate(widget.pokemon.types?.length ?? 0, (index) {
+              final type = widget.pokemon.types?[index].type?.name ?? "unknown";
+              return _typeItem(type);
+            }),
+          ),
         ],
       ),
     );
   }
 
-  Widget _pokemonDetail() {
+  Widget _pokemonDetailPortrait() {
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final imageHeight = AppSetting.setHeight(600);
+          final isPortrait = AppSetting.isPortrait(context);
+          final imageHeight = isPortrait
+              ? AppSetting.setHeight(600)
+              : AppSetting.setHeight(400);
           final whiteContainerHeight = AppSetting.setHeight(100);
 
           return Stack(
@@ -273,42 +468,47 @@ class _ContentSectionState extends State<_ContentSection> {
   }
 
   Widget _pokemonInfo() {
+    final isPortrait = AppSetting.isPortrait(context);
+    final fontSize = isPortrait ? 70.0 : 50.0;
+    final idFontSize = isPortrait ? 45.0 : 35.0;
+
     return Padding(
       padding: .symmetric(horizontal: AppSetting.setWidth(50)),
       child: Row(
         mainAxisAlignment: .spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                widget.pokemon.name?.capitalizeMultipleWords() ?? "Unknown",
-                style: TextStyle(
-                  fontSize: AppSetting.setFontSize(70),
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  widget.pokemon.name?.capitalizeMultipleWords() ?? "Unknown",
+                  style: MyTheme.style.title.copyWith(
+                    fontSize: AppSetting.setFontSize(fontSize),
+                    color: MyTheme.color.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Space.h(20),
-              Row(
-                children: List.generate(widget.pokemon.types?.length ?? 0, (
-                  index,
-                ) {
-                  final type =
-                      widget.pokemon.types?[index].type?.name ?? "unknown";
-                  return Padding(
-                    padding: EdgeInsets.only(right: AppSetting.setWidth(20)),
-                    child: _typeItem(type),
-                  );
-                }),
-              ),
-            ],
+                Space.h(20),
+                Wrap(
+                  spacing: AppSetting.setWidth(15),
+                  runSpacing: AppSetting.setHeight(10),
+                  children: List.generate(widget.pokemon.types?.length ?? 0, (
+                    index,
+                  ) {
+                    final type =
+                        widget.pokemon.types?[index].type?.name ?? "unknown";
+                    return _typeItem(type);
+                  }),
+                ),
+              ],
+            ),
           ),
           Text(
             "#${widget.pokemon.id.toString().padLeft(4, '0')}",
-            style: TextStyle(
-              fontSize: AppSetting.setFontSize(45),
-              color: Colors.white,
+            style: MyTheme.style.subtitle.copyWith(
+              fontSize: AppSetting.setFontSize(idFontSize),
+              color: MyTheme.color.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -418,16 +618,21 @@ class _BackgroundSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = AppSetting.isPortrait(context);
+    final heightPercentage = isPortrait ? 0.5 : 0.8;
+
     return SizedBox(
-      height: AppSetting.deviceHeight / 2,
+      height: AppSetting.deviceHeight * heightPercentage,
       width: AppSetting.deviceWidth,
       child: Stack(
         children: [
           Positioned(
             bottom: 0,
-            right: 0,
+            right: isPortrait ? 0 : -50,
             child: Assets.icons.iconPokeball.image(
-              width: AppSetting.deviceWidth * 0.5,
+              width: isPortrait
+                  ? AppSetting.deviceWidth * 0.5
+                  : AppSetting.deviceWidth * 0.3,
               color: Colors.white.withValues(alpha: 0.3),
             ),
           ),

@@ -12,7 +12,7 @@ class PokemonLocalDatasource {
     try {
       final SharedManager sharedManager = SharedManager<String>();
       /// do the json decoding
-      final String rawFavorite = await sharedManager.read("tes_favorite");
+      final String rawFavorite = await sharedManager.read("pokemon_favorite_items");
       if (rawFavorite.isEmpty) {
         return [];
       }
@@ -36,7 +36,7 @@ class PokemonLocalDatasource {
       "data": currentFavorites.map((e) => e.toJson()).toList(),
     };
     final String encodedFavorites = jsonEncode(dataMap);
-    await sharedManager.store("tes_favorite", encodedFavorites);
+    await sharedManager.store("pokemon_favorite_items", encodedFavorites);
   }
 
   /// Remove favorite Pokémon from shared preferences
@@ -48,7 +48,7 @@ class PokemonLocalDatasource {
       "data": currentFavorites.map((e) => e.toJson()).toList(),
     };
     final String encodedFavorites = jsonEncode(dataMap);
-    await sharedManager.store("tes_favorite", encodedFavorites);
+    await sharedManager.store("pokemon_favorite_items", encodedFavorites);
   }
 
   Future<bool> isFavoritePokemon(PokemonEntity pokemon) async {
